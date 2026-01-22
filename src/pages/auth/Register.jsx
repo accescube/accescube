@@ -75,6 +75,7 @@ function Register() {
             await register({
                 name: formData.name,
                 email: formData.email,
+                password: formData.password,
                 role: role,
             });
             navigate('/dashboard');
