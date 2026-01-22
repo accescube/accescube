@@ -38,43 +38,43 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen flex">
-            {/* Left Panel - Form */}
-            <div className="flex-1 flex flex-col p-6 lg:p-12">
-                <div className="flex items-center justify-between mb-8">
-                    <Link to="/" className="flex items-center gap-2 text-secondary hover:text-primary transition">
-                        <ArrowLeft size={20} />
-                        <span>Back</span>
-                    </Link>
-                    <button
-                        className="btn btn-ghost btn-icon"
-                        onClick={toggleTheme}
-                    >
-                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                    </button>
-                </div>
+        <div className="min-h-screen flex items-center justify-center bg-primary p-4">
+            <div className="w-full max-w-6xl flex shadow-2xl rounded-3xl overflow-hidden bg-elevated border border-light animate-fade-in min-h-[600px]">
+                {/* Left Side: Form */}
+                <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center">
+                    <div className="flex items-center justify-between mb-12">
+                        <Link to="/" className="flex items-center gap-2 text-secondary hover:text-primary transition group">
+                            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                            <span className="font-medium">Back</span>
+                        </Link>
+                        <button
+                            className="btn btn-ghost btn-icon"
+                            onClick={toggleTheme}
+                        >
+                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
+                    </div>
 
-                <div className="flex-1 flex items-center justify-center">
-                    <div className="w-full max-w-md">
-                        <div className="text-center mb-8">
-                            <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                                <img src="/cube.svg" alt="Accescube" style={{ width: 48, height: 48 }} />
+                    <div className="w-full max-w-sm mx-auto">
+                        <div className="text-center mb-10">
+                            <Link to="/" className="inline-flex items-center gap-3 mb-8 hover:scale-110 transition-transform">
+                                <img src="/cube.svg" alt="Accescube" className="w-16 h-16 drop-shadow-glow" />
                             </Link>
-                            <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
+                            <h1 className="text-3xl font-bold mb-3 tracking-tight">Welcome Back</h1>
                             <p className="text-secondary">Sign in to access your dashboard</p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                             {error && (
-                                <div className="p-4 rounded-lg bg-error-500/10 border border-error-500/30 text-error-500 text-sm">
+                                <div className="p-4 rounded-xl bg-error-500/10 border border-error-500/20 text-error-500 text-sm animate-scale-in">
                                     {error}
                                 </div>
                             )}
 
                             <Input
-                                label="Email"
+                                label="Email address"
                                 type="email"
-                                placeholder="you@example.com"
+                                placeholder="name@company.com"
                                 icon={Mail}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -88,15 +88,15 @@ function Login() {
                                     <input
                                         type={showPassword ? 'text' : 'password'}
                                         className="input"
-                                        placeholder="Enter your password"
+                                        placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
-                                        style={{ paddingRight: '3rem' }}
+                                        style={{ paddingRight: '3.5rem' }}
                                     />
                                     <button
                                         type="button"
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-tertiary hover:text-primary transition"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-tertiary hover:text-primary transition p-2"
                                         onClick={() => setShowPassword(!showPassword)}
                                     >
                                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -104,12 +104,12 @@ function Login() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between text-sm">
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" className="w-4 h-4 rounded" />
-                                    <span className="text-secondary">Remember me</span>
+                            <div className="flex items-center justify-between text-sm mt-1">
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input type="checkbox" className="w-4 h-4 rounded border-light text-primary-500 focus:ring-primary-500" />
+                                    <span className="text-secondary group-hover:text-primary transition">Remember me</span>
                                 </label>
-                                <Link to="/forgot-password" className="text-primary-500 hover:underline">
+                                <Link to="/forgot-password" name="forgot-password-link" className="text-primary-500 font-medium hover:underline decoration-2 underline-offset-4">
                                     Forgot password?
                                 </Link>
                             </div>
@@ -117,40 +117,34 @@ function Login() {
                             <Button
                                 type="submit"
                                 variant="primary"
-                                className="w-full mt-2"
+                                className="w-full mt-4 py-4 text-lg"
                                 loading={loading}
                             >
                                 Sign In
                             </Button>
                         </form>
 
-                        <div className="mt-6 text-center">
+                        <div className="mt-10 text-center">
                             <p className="text-secondary">
-                                Don't have an account?{' '}
-                                <Link to="/register" className="text-primary-500 font-medium hover:underline">
-                                    Sign up
+                                New to Accescube?{' '}
+                                <Link to="/register" className="text-primary-500 font-bold hover:underline decoration-2 underline-offset-4">
+                                    Create account
                                 </Link>
                             </p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Right Panel - Gradient Background */}
-            <div className="hidden lg:flex flex-1 bg-gradient-hero relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center text-white p-12">
-                        <div className="text-6xl mb-6 animate-float">🧊</div>
-                        <h2 className="text-3xl font-bold mb-4">Build Your Cube</h2>
-                        <p className="text-lg opacity-90 max-w-md">
-                            Join the next-generation platform connecting professionals worldwide
+                {/* Right Side: Visual Panel */}
+                <div className="hidden lg:flex flex-1 bg-gradient-hero relative overflow-hidden items-center justify-center p-12">
+                    <div className="relative z-10 text-center text-white">
+                        <div className="text-8xl mb-10 animate-float drop-shadow-2xl">🧊</div>
+                        <h2 className="text-4xl font-extrabold mb-6 leading-tight">Your Digital HQ<br />Starts Here</h2>
+                        <p className="text-xl text-white/80 max-w-sm mx-auto leading-relaxed">
+                            Join the next-generation platform connecting professionals worldwide.
                         </p>
                     </div>
                 </div>
-                {/* Decorative elements */}
-                <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-white/10 animate-float" />
-                <div className="absolute bottom-20 right-20 w-32 h-32 rounded-full bg-white/10 animate-float" style={{ animationDelay: '1s' }} />
-                <div className="absolute top-1/2 right-10 w-16 h-16 rounded-full bg-white/5 animate-float" style={{ animationDelay: '2s' }} />
             </div>
         </div>
     );
