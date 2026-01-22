@@ -243,6 +243,7 @@ input, textarea, select {
 .gap-4 { gap: var(--space-4); }
 .gap-6 { gap: var(--space-6); }
 .gap-8 { gap: var(--space-8); }
+.flex-1 { flex: 1 1 0%; }
 
 .grid { display: grid; }
 .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
@@ -264,6 +265,7 @@ input, textarea, select {
 
 /* Spacing */
 .m-auto { margin: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
 .mt-4 { margin-top: var(--space-4); }
 .mt-6 { margin-top: var(--space-6); }
 .mt-8 { margin-top: var(--space-8); }
@@ -349,6 +351,7 @@ input, textarea, select {
 .rounded-lg { border-radius: var(--radius-lg); }
 .rounded-xl { border-radius: var(--radius-xl); }
 .rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-3xl { border-radius: 2rem; }
 .rounded-full { border-radius: var(--radius-full); }
 
 /* Shadows */
@@ -356,6 +359,7 @@ input, textarea, select {
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-xl { box-shadow: var(--shadow-xl); }
+.shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
 .shadow-card { box-shadow: var(--shadow-card); }
 .shadow-glow { box-shadow: var(--shadow-glow); }
 
@@ -378,6 +382,7 @@ input, textarea, select {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.drop-shadow-glow { filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.4)); }
 
 /* Visibility */
 .hidden { display: none; }
@@ -410,6 +415,7 @@ input, textarea, select {
 .fixed { position: fixed; }
 .sticky { position: sticky; }
 .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.z-10 { z-index: 10; }
 .top-0 { top: 0; }
 .bottom-0 { bottom: 0; }
 .left-0 { left: 0; }
@@ -424,6 +430,8 @@ input, textarea, select {
 .max-w-xl { max-width: 36rem; }
 .max-w-2xl { max-width: 42rem; }
 .max-w-4xl { max-width: 56rem; }
+.max-w-5xl { max-width: 64rem; }
+.max-w-6xl { max-width: 72rem; }
 
 /* Cursor */
 .cursor-pointer { cursor: pointer; }
