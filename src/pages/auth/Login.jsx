@@ -26,7 +26,12 @@ function Login() {
             await login(email, password);
             navigate('/dashboard');
         } catch (err) {
-            setError('Invalid email or password. Try: agent@demo.com / 1234');
+            console.error("Login Error:", err);
+            // Show the actual error message from Firebase or a generic one
+            const message = err.message || 'Failed to sign in. Please check your credentials.';
+            // Clean up common firebase error prefixes
+            const displayMessage = message.replace('Firebase: ', '').replace('auth/', '');
+            setError(displayMessage);
         } finally {
             setLoading(false);
         }
@@ -126,30 +131,6 @@ function Login() {
                                     Sign up
                                 </Link>
                             </p>
-                        </div>
-
-                        {/* Demo Accounts */}
-                        <div className="mt-8 p-4 rounded-xl bg-secondary border border-light">
-                            <p className="text-sm font-medium mb-3">Demo Accounts:</p>
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                                <div className="p-2 rounded bg-tertiary">
-                                    <div className="font-medium">Agent</div>
-                                    <div className="text-tertiary">agent@demo.com</div>
-                                </div>
-                                <div className="p-2 rounded bg-tertiary">
-                                    <div className="font-medium">Space</div>
-                                    <div className="text-tertiary">space@demo.com</div>
-                                </div>
-                                <div className="p-2 rounded bg-tertiary">
-                                    <div className="font-medium">Employer</div>
-                                    <div className="text-tertiary">employer@demo.com</div>
-                                </div>
-                                <div className="p-2 rounded bg-tertiary">
-                                    <div className="font-medium">Admin</div>
-                                    <div className="text-tertiary">admin@demo.com</div>
-                                </div>
-                            </div>
-                            <p className="text-xs text-tertiary mt-2">Password: any 4+ characters</p>
                         </div>
                     </div>
                 </div>

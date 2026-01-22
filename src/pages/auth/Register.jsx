@@ -64,8 +64,8 @@ function Register() {
             return;
         }
 
-        if (formData.password.length < 4) {
-            setError('Password must be at least 4 characters');
+        if (formData.password.length < 6) {
+            setError('Password must be at least 6 characters');
             return;
         }
 
@@ -79,16 +79,21 @@ function Register() {
             });
             navigate('/dashboard');
         } catch (err) {
-            setError('Registration failed. Please try again.');
+            console.error("Registration Error:", err);
+            // Show the actual error message from Firebase
+            const message = err.message || 'Registration failed. Please try again.';
+            // Clean up common firebase error prefixes
+            const displayMessage = message.replace('Firebase: ', '').replace('auth/', '');
+            setError(displayMessage);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex w-full">
             {/* Left Panel - Form */}
-            <div className="flex-1 flex flex-col p-6 lg:p-12">
+            <div className="flex-1 flex flex-col p-6 lg:p-12 w-full max-w-full lg:max-w-[50%] z-10">
                 <div className="flex items-center justify-between mb-8">
                     <button
                         onClick={() => step === 1 ? navigate('/') : setStep(1)}
@@ -105,8 +110,8 @@ function Register() {
                     </button>
                 </div>
 
-                <div className="flex-1 flex items-center justify-center">
-                    <div className="w-full max-w-lg">
+                <div className="flex-1 flex items-center justify-center w-full">
+                    <div className="w-full max-w-lg mx-auto">
                         {/* Step 1: Role Selection */}
                         {step === 1 && (
                             <>
