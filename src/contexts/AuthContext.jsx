@@ -1,4 +1,13 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    updateProfile as updateAuthProfile
+} from 'firebase/auth';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 
 const AuthContext = createContext();
 
@@ -7,90 +16,98 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check for saved session
-        const savedUser = localStorage.getItem('accescube-user');
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
-        setLoading(false);
+        // Listen for auth state changes
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                // User is signed in, fetch additional profile data from Firestore
+                try {
+                    const userDocRef = doc(db, 'users', firebaseUser.uid);
+                    const userDoc = await getDoc(userDocRef);
+
+                    if (userDoc.exists()) {
+                        // Merge Auth object with Firestore data
+                        setUser({ ...firebaseUser, ...userDoc.data(), id: firebaseUser.uid });
+                    } else {
+                        // Fallback if firestore doc missing (shouldn't happen usually)
+                        setUser({ ...firebaseUser, id: firebaseUser.uid });
+                    }
+                } catch (error) {
+                    console.error("Error fetching user profile:", error);
+                    // Still set the basic auth user so they aren't locked out
+                    setUser(firebaseUser);
+                }
+            } else {
+                // User is signed out
+                setUser(null);
+            }
+            setLoading(false);
+        });
+
+        return unsubscribe;
     }, []);
 
-    const login = async (email, password) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // Get all registered users
-                const users = JSON.parse(localStorage.getItem('accescube-users') || '[]');
-
-                // Find user with matching credentials
-                const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
-
-                if (foundUser) {
-                    // Remove password from session data
-                    const { password: _, ...userWithoutPassword } = foundUser;
-                    setUser(userWithoutPassword);
-                    localStorage.setItem('accescube-user', JSON.stringify(userWithoutPassword));
-                    resolve(userWithoutPassword);
-                } else {
-                    reject(new Error('Invalid email or password'));
-                }
-            }, 800);
-        });
+    const login = (email, password) => {
+        return signInWithEmailAndPassword(auth, email, password);
     };
 
     const register = async (userData) => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                const users = JSON.parse(localStorage.getItem('accescube-users') || '[]');
+        // 1. Create user in Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+        const firebaseUser = userCredential.user;
 
-                // Check if email already exists
-                if (users.some(u => u.email.toLowerCase() === userData.email.toLowerCase())) {
-                    reject(new Error('Email already registered'));
-                    return;
-                }
+        // 2. Prepare profile data (exclude password)
+        const { password, ...profileData } = userData;
 
-                const newUser = {
-                    id: Date.now().toString(),
-                    ...userData,
-                    verified: false,
-                    avatar: null,
-                    createdAt: new Date().toISOString()
-                };
+        const newTimestamp = new Date().toISOString();
+        const userProfile = {
+            ...profileData,
+            id: firebaseUser.uid,
+            verified: false,
+            avatar: null,
+            createdAt: newTimestamp,
+            updatedAt: newTimestamp
+        };
 
-                // Save to users list (including password)
-                const updatedUsers = [...users, newUser];
-                localStorage.setItem('accescube-users', JSON.stringify(updatedUsers));
+        // 3. Save detailed profile to Firestore
+        await setDoc(doc(db, 'users', firebaseUser.uid), userProfile);
 
-                // Save to session (excluding password)
-                const { password: _, ...userSession } = newUser;
-                setUser(userSession);
-                localStorage.setItem('accescube-user', JSON.stringify(userSession));
+        // 4. Update display name in Auth for convenience
+        if (userData.name) {
+            await updateAuthProfile(firebaseUser, { displayName: userData.name });
+        }
 
-                resolve(userSession);
-            }, 800);
-        });
+        // State update handled by onAuthStateChanged
+        return firebaseUser;
     };
 
     const logout = () => {
-        setUser(null);
-        localStorage.removeItem('accescube-user');
+        return signOut(auth);
     };
 
-    const updateProfile = (updates) => {
-        const updatedUser = { ...user, ...updates };
+    const updateProfile = async (updates) => {
+        if (!user) return;
 
-        // Update session
-        setUser(updatedUser);
-        localStorage.setItem('accescube-user', JSON.stringify(updatedUser));
+        try {
+            // Update Firestore document
+            const userDocRef = doc(db, 'users', user.id);
+            await updateDoc(userDocRef, updates);
 
-        // Update in users database
-        const users = JSON.parse(localStorage.getItem('accescube-users') || '[]');
-        const updatedUsers = users.map(u => u.id === user.id ? { ...u, ...updates } : u);
-        localStorage.setItem('accescube-users', JSON.stringify(updatedUsers));
+            // Update local state immediately for UI responsiveness
+            setUser(prev => ({ ...prev, ...updates }));
+
+            // If name changed, optionally update Auth profile too
+            if (updates.name) {
+                await updateAuthProfile(auth.currentUser, { displayName: updates.name });
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            throw error;
+        }
     };
 
     return (
         <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfile }}>
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     );
 }

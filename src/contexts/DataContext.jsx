@@ -1,320 +1,217 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import {
+    collection,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    query,
+    orderBy,
+    serverTimestamp
+} from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 const DataContext = createContext();
 
 export function DataProvider({ children }) {
-    // Core Entities - Initialize from LocalStorage or empty array
-    const [agents, setAgents] = useState(() => {
-        const saved = localStorage.getItem('accescube-agents');
-        return saved ? JSON.parse(saved) : [];
-    });
+    // ============ STATE DEFINITIONS ============
+    const [agents, setAgents] = useState([]);
+    const [spaces, setSpaces] = useState([]);
+    const [employers, setEmployers] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [bookings, setBookings] = useState([]);
+    const [leads, setLeads] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [reviews, setReviews] = useState([]);
+    const [wallet, setWallet] = useState({ balance: 0, transactions: [] });
+    const [favorites, setFavorites] = useState([]);
+    const [eventRegistrations, setEventRegistrations] = useState([]);
+    const [hiredAgents, setHiredAgents] = useState([]);
+    const [employerSpaces, setEmployerSpaces] = useState([]);
 
-    const [spaces, setSpaces] = useState(() => {
-        const saved = localStorage.getItem('accescube-spaces');
-        return saved ? JSON.parse(saved) : [];
-    });
+    // ============ FIRESTORE LISTENERS ============
+    // Helper to subscribe to a collection
+    const subscribe = (collectionName, setter) => {
+        const q = query(collection(db, collectionName));
+        return onSnapshot(q, (snapshot) => {
+            const data = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setter(data);
+        }, (error) => {
+            console.error(`Error reading ${collectionName}:`, error);
+        });
+    };
 
-    const [employers, setEmployers] = useState(() => {
-        const saved = localStorage.getItem('accescube-employers');
-        return saved ? JSON.parse(saved) : [];
-    });
+    useEffect(() => {
+        const unsubAgents = subscribe('agents', setAgents);
+        const unsubSpaces = subscribe('spaces', setSpaces);
+        const unsubEmployers = subscribe('employers', setEmployers);
+        const unsubEvents = subscribe('events', setEvents);
+        const unsubBookings = subscribe('bookings', setBookings);
+        const unsubLeads = subscribe('leads', setLeads);
+        const unsubMessages = subscribe('messages', setMessages);
+        const unsubReviews = subscribe('reviews', setReviews);
+        const unsubFavorites = subscribe('favorites', (data) => setFavorites(data.map(f => f.key))); // Store as keys for compatibility
+        const unsubEventRegs = subscribe('eventRegistrations', setEventRegistrations);
+        const unsubHiredAgents = subscribe('hiredAgents', setHiredAgents);
+        const unsubEmployerSpaces = subscribe('employerSpaces', setEmployerSpaces);
 
-    const [events, setEvents] = useState(() => {
-        const saved = localStorage.getItem('accescube-events');
-        return saved ? JSON.parse(saved) : [];
-    });
+        // Wallet is special (transactions)
+        const unsubTransactions = subscribe('transactions', (txs) => {
+            const balance = txs.reduce((acc, tx) =>
+                tx.type === 'credit' ? acc + (Number(tx.amount) || 0) : acc - (Number(tx.amount) || 0), 0
+            );
+            setWallet({ balance, transactions: txs.sort((a, b) => new Date(b.date) - new Date(a.date)) });
+        });
 
-    // Bookings for spaces
-    const [bookings, setBookings] = useState(() => {
-        const saved = localStorage.getItem('accescube-bookings');
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    // Leads for agents
-    const [leads, setLeads] = useState(() => {
-        const saved = localStorage.getItem('accescube-leads');
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    // Messages
-    const [messages, setMessages] = useState(() => {
-        const saved = localStorage.getItem('accescube-messages');
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    // Reviews
-    const [reviews, setReviews] = useState(() => {
-        const saved = localStorage.getItem('accescube-reviews');
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    // Wallet
-    const [wallet, setWallet] = useState(() => {
-        const saved = localStorage.getItem('accescube-wallet');
-        return saved ? JSON.parse(saved) : {
-            balance: 0,
-            transactions: []
+        return () => {
+            unsubAgents();
+            unsubSpaces();
+            unsubEmployers();
+            unsubEvents();
+            unsubBookings();
+            unsubLeads();
+            unsubMessages();
+            unsubReviews();
+            unsubFavorites();
+            unsubEventRegs();
+            unsubHiredAgents();
+            unsubEmployerSpaces();
+            unsubTransactions();
         };
-    });
+    }, []);
 
-    // Favorites
-    const [favorites, setFavorites] = useState(() => {
-        const saved = localStorage.getItem('accescube-favorites');
-        return saved ? JSON.parse(saved) : [];
-    });
 
-    // Event Registrations
-    const [eventRegistrations, setEventRegistrations] = useState(() => {
-        const saved = localStorage.getItem('accescube-event-registrations');
-        return saved ? JSON.parse(saved) : [];
-    });
+    // ============ GENERIC HELPERS ============
+    const addToDb = async (coll, data) => {
+        try {
+            const docRef = await addDoc(collection(db, coll), {
+                ...data,
+                createdAt: new Date().toISOString() // Use ISO string for consistency with app logic
+            });
+            return { id: docRef.id, ...data };
+        } catch (e) {
+            console.error(`Error adding to ${coll}:`, e);
+            throw e;
+        }
+    };
 
-    // Hired Agents
-    const [hiredAgents, setHiredAgents] = useState(() => {
-        const saved = localStorage.getItem('accescube-hired-agents');
-        return saved ? JSON.parse(saved) : [];
-    });
+    const updateInDb = async (coll, id, updates) => {
+        try {
+            const docRef = doc(db, coll, id);
+            await updateDoc(docRef, updates);
+        } catch (e) {
+            console.error(`Error updating ${coll}:`, e);
+            throw e;
+        }
+    };
 
-    // Employer Spaces (Long-term rentals)
-    const [employerSpaces, setEmployerSpaces] = useState(() => {
-        const saved = localStorage.getItem('accescube-employer-spaces');
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    // Persist to localStorage
-    useEffect(() => {
-        localStorage.setItem('accescube-agents', JSON.stringify(agents));
-    }, [agents]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-spaces', JSON.stringify(spaces));
-    }, [spaces]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-employers', JSON.stringify(employers));
-    }, [employers]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-events', JSON.stringify(events));
-    }, [events]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-bookings', JSON.stringify(bookings));
-    }, [bookings]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-leads', JSON.stringify(leads));
-    }, [leads]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-messages', JSON.stringify(messages));
-    }, [messages]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-reviews', JSON.stringify(reviews));
-    }, [reviews]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-wallet', JSON.stringify(wallet));
-    }, [wallet]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-favorites', JSON.stringify(favorites));
-    }, [favorites]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-event-registrations', JSON.stringify(eventRegistrations));
-    }, [eventRegistrations]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-hired-agents', JSON.stringify(hiredAgents));
-    }, [hiredAgents]);
-
-    useEffect(() => {
-        localStorage.setItem('accescube-employer-spaces', JSON.stringify(employerSpaces));
-    }, [employerSpaces]);
+    const deleteFromDb = async (coll, id) => {
+        try {
+            await deleteDoc(doc(db, coll, id));
+        } catch (e) {
+            console.error(`Error deleting from ${coll}:`, e);
+            throw e;
+        }
+    };
 
     // ============ AGENT FUNCTIONS ============
-    const addAgent = (agent) => {
-        const newAgent = { ...agent, id: Date.now().toString(), createdAt: new Date().toISOString() };
-        setAgents(prev => [...prev, newAgent]);
-        return newAgent;
-    };
-
-    const updateAgent = (id, updates) => {
-        setAgents(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
-    };
-
-    const deleteAgent = (id) => {
-        setAgents(prev => prev.filter(a => a.id !== id));
-    };
+    const addAgent = (agent) => addToDb('agents', agent);
+    const updateAgent = (id, updates) => updateInDb('agents', id, updates);
+    const deleteAgent = (id) => deleteFromDb('agents', id);
 
     // ============ SPACE FUNCTIONS ============
-    const addSpace = (space) => {
-        const newSpace = { ...space, id: Date.now().toString(), createdAt: new Date().toISOString() };
-        setSpaces(prev => [...prev, newSpace]);
-        return newSpace;
-    };
-
-    const updateSpace = (id, updates) => {
-        setSpaces(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
-    };
-
-    const deleteSpace = (id) => {
-        setSpaces(prev => prev.filter(s => s.id !== id));
-    };
+    const addSpace = (space) => addToDb('spaces', space);
+    const updateSpace = (id, updates) => updateInDb('spaces', id, updates);
+    const deleteSpace = (id) => deleteFromDb('spaces', id);
 
     // ============ EMPLOYER FUNCTIONS ============
-    const addEmployer = (employer) => {
-        const newEmployer = { ...employer, id: Date.now().toString(), createdAt: new Date().toISOString() };
-        setEmployers(prev => [...prev, newEmployer]);
-        return newEmployer;
-    };
+    const addEmployer = (employer) => addToDb('employers', employer);
+    const updateEmployer = (id, updates) => updateInDb('employers', id, updates);
+    const deleteEmployer = (id) => deleteFromDb('employers', id);
 
-    const updateEmployer = (id, updates) => {
-        setEmployers(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
-    };
+    const hireAgent = (employerId, agentData) => addToDb('hiredAgents', {
+        employerId,
+        status: 'active',
+        hiredAt: new Date().toISOString(),
+        ...agentData
+    });
 
-    const deleteEmployer = (id) => {
-        setEmployers(prev => prev.filter(e => e.id !== id));
-    };
+    const removeHiredAgent = (id) => deleteFromDb('hiredAgents', id);
 
-    const hireAgent = (employerId, agentData) => {
-        const newHired = {
-            id: Date.now().toString(),
-            employerId,
-            status: 'active',
-            hiredAt: new Date().toISOString(),
-            ...agentData
-        };
-        setHiredAgents(prev => [...prev, newHired]);
-        return newHired;
-    };
+    const getHiredAgents = (employerId) => hiredAgents.filter(a => a.employerId === employerId);
 
-    const removeHiredAgent = (id) => {
-        setHiredAgents(prev => prev.filter(a => a.id !== id));
-    };
+    const rentSpace = (employerId, spaceData) => addToDb('employerSpaces', {
+        employerId,
+        status: 'active',
+        rentedAt: new Date().toISOString(),
+        ...spaceData
+    });
 
-    const getHiredAgents = (employerId) => {
-        return hiredAgents.filter(a => a.employerId === employerId);
-    };
+    const cancelSpaceRental = (id) => deleteFromDb('employerSpaces', id);
 
-    const rentSpace = (employerId, spaceData) => {
-        const newRental = {
-            id: Date.now().toString(),
-            employerId,
-            status: 'active',
-            rentedAt: new Date().toISOString(),
-            ...spaceData
-        };
-        setEmployerSpaces(prev => [...prev, newRental]);
-        return newRental;
-    };
-
-    const cancelSpaceRental = (id) => {
-        setEmployerSpaces(prev => prev.filter(s => s.id !== id));
-    };
-
-    const getEmployerSpaces = (employerId) => {
-        return employerSpaces.filter(s => s.employerId === employerId);
-    };
+    const getEmployerSpaces = (employerId) => employerSpaces.filter(s => s.employerId === employerId);
 
     // ============ BOOKING FUNCTIONS ============
-    const createBooking = (booking) => {
-        const newBooking = {
-            ...booking,
-            id: Date.now().toString(),
-            status: 'confirmed',
-            createdAt: new Date().toISOString(),
-        };
-        setBookings(prev => [...prev, newBooking]);
-        return newBooking;
-    };
+    const createBooking = (booking) => addToDb('bookings', {
+        ...booking,
+        status: 'confirmed'
+    });
 
-    const updateBooking = (id, updates) => {
-        setBookings(prev => prev.map(b => b.id === id ? { ...b, ...updates } : b));
-    };
+    const updateBooking = (id, updates) => updateInDb('bookings', id, updates);
 
-    const cancelBooking = (id) => {
-        setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'cancelled' } : b));
-    };
+    const cancelBooking = (id) => updateInDb('bookings', id, { status: 'cancelled' });
 
-    const getBookingsForSpace = (spaceId) => {
-        return bookings.filter(b => b.spaceId === spaceId);
-    };
+    const getBookingsForSpace = (spaceId) => bookings.filter(b => b.spaceId === spaceId);
 
-    const getBookingsForUser = (userId) => {
-        return bookings.filter(b => b.userId === userId);
-    };
+    const getBookingsForUser = (userId) => bookings.filter(b => b.userId === userId);
 
     // ============ LEAD FUNCTIONS ============
-    const createLead = (lead) => {
-        const newLead = {
-            ...lead,
-            id: Date.now().toString(),
-            status: 'new',
-            createdAt: new Date().toISOString(),
-        };
-        setLeads(prev => [...prev, newLead]);
-        return newLead;
-    };
+    const createLead = (lead) => addToDb('leads', {
+        ...lead,
+        status: 'new'
+    });
 
-    const updateLead = (id, updates) => {
-        setLeads(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l));
-    };
+    const updateLead = (id, updates) => updateInDb('leads', id, updates);
 
-    const acceptLead = (id) => {
-        setLeads(prev => prev.map(l => l.id === id ? { ...l, status: 'accepted' } : l));
-    };
+    const acceptLead = (id) => updateInDb('leads', id, { status: 'accepted' });
 
-    const rejectLead = (id) => {
-        setLeads(prev => prev.map(l => l.id === id ? { ...l, status: 'rejected' } : l));
-    };
+    const rejectLead = (id) => updateInDb('leads', id, { status: 'rejected' });
 
-    const getLeadsForAgent = (agentId) => {
-        return leads.filter(l => l.agentId === agentId);
-    };
+    const getLeadsForAgent = (agentId) => leads.filter(l => l.agentId === agentId);
 
-    const deleteLead = (id) => {
-        setLeads(prev => prev.filter(l => l.id !== id));
-    };
+    const deleteLead = (id) => deleteFromDb('leads', id);
 
     // ============ MESSAGE FUNCTIONS ============
-    const sendMessage = (to, content, from = 'You') => {
-        const newMessage = {
-            id: Date.now().toString(),
-            from,
-            to,
-            content,
-            read: false,
-            createdAt: new Date().toISOString(),
-        };
-        setMessages(prev => [...prev, newMessage]);
-        return newMessage;
-    };
+    const sendMessage = (to, content, from = 'You') => addToDb('messages', {
+        from,
+        to,
+        content,
+        read: false
+    });
 
-    const markMessageRead = (id) => {
-        setMessages(prev => prev.map(m => m.id === id ? { ...m, read: true } : m));
-    };
+    const markMessageRead = (id) => updateInDb('messages', id, { read: true });
 
     const markAllMessagesRead = () => {
-        setMessages(prev => prev.map(m => ({ ...m, read: true })));
+        // This acts on local state to batch update but Firestore requires individual updates
+        // For efficiency in this demo, might need iteration. 
+        // Real app would use a batch write.
+        messages.filter(m => !m.read).forEach(m => {
+            updateInDb('messages', m.id, { read: true });
+        });
     };
 
-    const getUnreadCount = () => {
-        return messages.filter(m => !m.read).length;
-    };
+    const getUnreadCount = () => messages.filter(m => !m.read).length;
 
     // ============ REVIEW FUNCTIONS ============
-    const addReview = (review) => {
-        const newReview = {
-            ...review,
-            id: Date.now().toString(),
-            createdAt: new Date().toISOString(),
-        };
-        setReviews(prev => [...prev, newReview]);
+    const addReview = async (review) => {
+        const newReview = await addToDb('reviews', review);
 
         // Update rating on the target
+        // Note: 'reviews' state might not update immediately here due to async listener
         const targetReviews = [...reviews, newReview].filter(r => r.targetId === review.targetId);
         const avgRating = targetReviews.reduce((acc, r) => acc + r.rating, 0) / targetReviews.length;
 
@@ -332,61 +229,72 @@ export function DataProvider({ children }) {
     };
 
     // ============ WALLET FUNCTIONS ============
-    const addTransaction = (type, amount, description) => {
-        const newTransaction = {
-            id: Date.now().toString(),
-            type,
-            amount,
-            description,
-            date: new Date().toISOString(),
-        };
-
-        setWallet(prev => ({
-            balance: type === 'credit' ? prev.balance + amount : prev.balance - amount,
-            transactions: [newTransaction, ...prev.transactions],
-        }));
-
-        return newTransaction;
-    };
+    const addTransaction = (type, amount, description) => addToDb('transactions', {
+        type,
+        amount,
+        description,
+        date: new Date().toISOString()
+    });
 
     const getWalletBalance = () => wallet.balance;
     const getTransactions = () => wallet.transactions;
 
     // ============ FAVORITE FUNCTIONS ============
-    const toggleFavorite = (type, id) => {
+    const toggleFavorite = async (type, id) => {
         const key = `${type}-${id}`;
-        setFavorites(prev =>
-            prev.includes(key) ? prev.filter(f => f !== key) : [...prev, key]
-        );
+        // Check if exists in local state (which comes from DB)
+        const exists = favorites.includes(key);
+
+        if (exists) {
+            // Need to find the doc ID to delete it. complex mapping.
+            // Simplified: we'll query for it.
+            // For now, this is a limitation without direct ID mapping. 
+            // Workaround: We fetch the doc we need to delete.
+            // Ideally favorites collection should have predictable IDs: `userId_type_id`.
+            // Let's assume global favorites for demo simplicity or use compound ID.
+            const docId = key; // Use key as ID
+            try {
+                // If we used addDoc logic above we can't do this easily.
+                // Let's switch logic: use setDoc with custom ID.
+                await deleteDoc(doc(db, 'favorites', key));
+            } catch (e) {
+                // ignore, maybe didn't exist
+            }
+        } else {
+            await import('firebase/firestore').then(mod =>
+                mod.setDoc(mod.doc(db, 'favorites', key), { key, type, itemId: id })
+            );
+        }
     };
 
-    const isFavorite = (type, id) => {
-        return favorites.includes(`${type}-${id}`);
-    };
+    const isFavorite = (type, id) => favorites.includes(`${type}-${id}`);
 
-    const getFavorites = (type) => {
-        return favorites.filter(f => f.startsWith(type)).map(f => f.split('-')[1]);
-    };
+    const getFavorites = (type) => favorites
+        .filter(f => f.startsWith(type))
+        .map(f => f.split('-')[1]);
 
     // ============ EVENT FUNCTIONS ============
-    const registerForEvent = (eventId, userId) => {
-        const registration = { eventId, userId, registeredAt: new Date().toISOString() };
-        setEventRegistrations(prev => [...prev, registration]);
+    const registerForEvent = async (eventId, userId) => {
+        const reg = await addToDb('eventRegistrations', { eventId, userId, registeredAt: new Date().toISOString() });
 
-        // Update event registered count
-        setEvents(prev => prev.map(e =>
-            e.id === eventId ? { ...e, registered: e.registered + 1 } : e
-        ));
-
-        return registration;
+        // Update event count (non-atomic for demo, transaction better for prod)
+        const event = events.find(e => e.id === eventId);
+        if (event) {
+            updateInDb('events', eventId, { registered: (event.registered || 0) + 1 });
+        }
+        return reg;
     };
 
-    const unregisterFromEvent = (eventId, userId) => {
-        setEventRegistrations(prev => prev.filter(r => !(r.eventId === eventId && r.userId === userId)));
-
-        setEvents(prev => prev.map(e =>
-            e.id === eventId ? { ...e, registered: Math.max(0, e.registered - 1) } : e
-        ));
+    const unregisterFromEvent = async (eventId, userId) => {
+        // Find registration to delete
+        const reg = eventRegistrations.find(r => r.eventId === eventId && r.userId === userId);
+        if (reg) {
+            await deleteFromDb('eventRegistrations', reg.id);
+            const event = events.find(e => e.id === eventId);
+            if (event) {
+                updateInDb('events', eventId, { registered: Math.max(0, (event.registered || 0) - 1) });
+            }
+        }
     };
 
     const isRegisteredForEvent = (eventId, userId) => {
@@ -394,15 +302,16 @@ export function DataProvider({ children }) {
     };
 
     // ============ SEARCH FUNCTIONS ============
-    const searchAgents = (query, filters = {}) => {
+    // Kept client-side for now since datasets are small in demo
+    const searchAgents = (queryText, filters = {}) => {
         return agents.filter(agent => {
-            const matchesQuery = !query ||
-                agent.name.toLowerCase().includes(query.toLowerCase()) ||
-                agent.title.toLowerCase().includes(query.toLowerCase()) ||
-                agent.skills.some(s => s.toLowerCase().includes(query.toLowerCase()));
+            const matchesQuery = !queryText ||
+                agent.name?.toLowerCase().includes(queryText.toLowerCase()) ||
+                agent.title?.toLowerCase().includes(queryText.toLowerCase()) ||
+                agent.skills?.some(s => s.toLowerCase().includes(queryText.toLowerCase()));
 
             const matchesLocation = !filters.location ||
-                agent.location.toLowerCase().includes(filters.location.toLowerCase());
+                agent.location?.toLowerCase().includes(filters.location.toLowerCase());
 
             const matchesCategory = !filters.category ||
                 agent.category === filters.category;
@@ -410,24 +319,24 @@ export function DataProvider({ children }) {
             const matchesPriceRange = !filters.priceRange || (() => {
                 const [min, max] = filters.priceRange.split('-').map(Number);
                 if (filters.priceRange.includes('+')) {
-                    return agent.hourlyRate >= parseInt(filters.priceRange);
+                    return (agent.hourlyRate || 0) >= parseInt(filters.priceRange);
                 }
-                return agent.hourlyRate >= min && agent.hourlyRate <= max;
+                return (agent.hourlyRate || 0) >= min && (agent.hourlyRate || 0) <= max;
             })();
 
             return matchesQuery && matchesLocation && matchesCategory && matchesPriceRange;
         });
     };
 
-    const searchSpaces = (query, filters = {}) => {
+    const searchSpaces = (queryText, filters = {}) => {
         return spaces.filter(space => {
-            const matchesQuery = !query ||
-                space.name.toLowerCase().includes(query.toLowerCase()) ||
-                space.type.toLowerCase().includes(query.toLowerCase()) ||
-                space.location.toLowerCase().includes(query.toLowerCase());
+            const matchesQuery = !queryText ||
+                space.name?.toLowerCase().includes(queryText.toLowerCase()) ||
+                space.type?.toLowerCase().includes(queryText.toLowerCase()) ||
+                space.location?.toLowerCase().includes(queryText.toLowerCase());
 
             const matchesLocation = !filters.location ||
-                space.location.toLowerCase().includes(filters.location.toLowerCase());
+                space.location?.toLowerCase().includes(filters.location.toLowerCase());
 
             const matchesType = !filters.type ||
                 space.type === filters.type;
@@ -436,11 +345,11 @@ export function DataProvider({ children }) {
         });
     };
 
-    const searchEmployers = (query, filters = {}) => {
+    const searchEmployers = (queryText, filters = {}) => {
         return employers.filter(employer => {
-            const matchesQuery = !query ||
-                employer.name.toLowerCase().includes(query.toLowerCase()) ||
-                employer.industry.toLowerCase().includes(query.toLowerCase());
+            const matchesQuery = !queryText ||
+                employer.name?.toLowerCase().includes(queryText.toLowerCase()) ||
+                employer.industry?.toLowerCase().includes(queryText.toLowerCase());
 
             const matchesIndustry = !filters.industry ||
                 employer.industry === filters.industry;
