@@ -18,8 +18,11 @@ import {
     X
 } from 'lucide-react';
 
+import { useData } from '../../contexts/DataContext';
+
 function AgentMyCube() {
     const { user, updateProfile } = useAuth();
+    const { agents, addAgent, updateAgent } = useData();
     const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditing, setIsEditing] = useState(false);
@@ -59,6 +62,47 @@ function AgentMyCube() {
 
     const handleDeleteService = (id) => {
         setServices(services.filter(s => s.id !== id));
+    };
+
+    const handleSaveProfile = async () => {
+        try {
+            // 1. Update User Profile
+            await updateProfile(formData);
+
+            // 2. Sync with Marketplace (Agents Collection)
+            // Check if this agent already exists in the marketplace
+            const existingAgent = agents.find(a => a.userId === user.id);
+
+            const agentListing = {
+                userId: user.id,
+                name: formData.name,
+                title: formData.title,
+                bio: formData.bio,
+                location: formData.location,
+                hourlyRate: formData.hourlyRate,
+                skills: formData.skills,
+                rating: existingAgent ? existingAgent.rating : 5.0,
+                reviews: existingAgent ? existingAgent.reviews : 0,
+                avatar: user.avatar,
+                verified: user.verified || false,
+                updatedAt: new Date().toISOString()
+            };
+
+            if (existingAgent) {
+                await updateAgent(existingAgent.id, agentListing);
+            } else {
+                await addAgent({
+                    ...agentListing,
+                    createdAt: new Date().toISOString()
+                });
+            }
+
+            toast.success('Profile and Marketplace listing updated!');
+            setIsEditing(false);
+        } catch (error) {
+            console.error('Error saving profile:', error);
+            toast.error('Failed to update profile');
+        }
     };
 
     return (
@@ -122,9 +166,7 @@ function AgentMyCube() {
                             icon={isEditing ? Save : Edit}
                             onClick={() => {
                                 if (isEditing) {
-                                    updateProfile(formData);
-                                    toast.success('Profile updated successfully!');
-                                    setIsEditing(false);
+                                    handleSaveProfile();
                                 } else {
                                     setIsEditing(true);
                                 }
