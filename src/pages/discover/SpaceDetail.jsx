@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../contexts/ToastContext';
 import { BottomNav } from '../../components/layout/Navigation';
-import { Badge, Rating } from '../../components/ui/Badge';
+import { Badge, Rating, Avatar } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -228,6 +228,25 @@ function SpaceDetail() {
                                         </div>
                                     );
                                 })}
+                            </div>
+                        </div>
+
+                        {/* Space Owner */}
+                        <div className="card p-6">
+                            <h2 className="text-lg font-semibold mb-4">Space Owner</h2>
+                            <div className="flex items-center gap-4 p-4 rounded-xl bg-secondary">
+                                <Avatar name={space.providerName || "Space Provider"} size="lg" />
+                                <div className="flex-1">
+                                    <h3 className="font-semibold">{space.providerName || "Official Provider"}</h3>
+                                    <p className="text-sm text-secondary">Verified Member since 2023</p>
+                                </div>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => toast.info(`Chat with ${space.providerName || "Provider"} coming soon!`)}
+                                >
+                                    Message
+                                </Button>
                             </div>
                         </div>
 

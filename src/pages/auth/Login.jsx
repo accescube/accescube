@@ -124,7 +124,42 @@ function Login() {
                             </Button>
                         </form>
 
-                        <div className="mt-10 text-center">
+                        <div className="mt-8">
+                            <div className="relative flex items-center justify-center mb-6">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-light"></div>
+                                </div>
+                                <span className="relative px-4 text-xs text-tertiary bg-elevated uppercase tracking-widest">Demo Accounts</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
+                                    onClick={() => { setEmail('agent@test.com'); setPassword('password123'); }}
+                                >
+                                    Agent
+                                </button>
+                                <button
+                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
+                                    onClick={() => { setEmail('provider@test.com'); setPassword('password123'); }}
+                                >
+                                    Provider
+                                </button>
+                                <button
+                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
+                                    onClick={() => { setEmail('employer@test.com'); setPassword('password123'); }}
+                                >
+                                    Employer
+                                </button>
+                                <button
+                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
+                                    onClick={() => { setEmail('admin@test.com'); setPassword('password123'); }}
+                                >
+                                    Admin
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 text-center">
                             <p className="text-secondary">
                                 New to Accescube?{' '}
                                 <Link to="/register" className="text-primary-500 font-bold hover:underline decoration-2 underline-offset-4">
