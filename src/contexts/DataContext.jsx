@@ -148,8 +148,11 @@ export function DataProvider({ children }) {
         employerId,
         status: 'active',
         rentedAt: new Date().toISOString(),
+        access: [], // Initialize with no specific access
         ...spaceData
     });
+
+    const updateEmployerSpace = (id, updates) => updateInDb('employerSpaces', id, updates);
 
     const cancelSpaceRental = (id) => deleteFromDb('employerSpaces', id);
 
@@ -372,7 +375,7 @@ export function DataProvider({ children }) {
             // Employer functions
             addEmployer, updateEmployer, deleteEmployer,
             hireAgent, removeHiredAgent, getHiredAgents,
-            rentSpace, cancelSpaceRental, getEmployerSpaces,
+            rentSpace, updateEmployerSpace, cancelSpaceRental, getEmployerSpaces,
 
             // Booking functions
             createBooking, updateBooking, cancelBooking, getBookingsForSpace, getBookingsForUser,

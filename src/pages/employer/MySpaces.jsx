@@ -20,17 +20,26 @@ import {
 
 function MySpaces() {
     const { user } = useAuth();
-    const { employerSpaces, spaces, getEmployerSpaces, rentSpace, cancelSpaceRental } = useData();
+    const {
+        employerSpaces,
+        spaces,
+        getEmployerSpaces,
+        rentSpace,
+        updateEmployerSpace,
+        cancelSpaceRental
+    } = useData();
     const { toast } = useToast();
 
     const [showRentModal, setShowRentModal] = useState(false);
+    const [showAccessModal, setShowAccessModal] = useState(false);
+    const [selectedRental, setSelectedRental] = useState(null);
+    const [newAccessName, setNewAccessName] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
 
     // Get spaces rented by current employer
     const mySpaces = getEmployerSpaces(user?.id || '3');
 
     // Available spaces (not already rented by this user)
-    // Note: In reality spaces might have capacity, but for demo we just check if *we* rented it
     const availableSpaces = spaces.filter(s =>
         !mySpaces.some(ms => ms.spaceId === s.id) &&
         (s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -39,7 +48,6 @@ function MySpaces() {
     );
 
     const handleRent = (space) => {
-        // Assume monthly rental for demo
         const cost = space.pricing.monthly || space.pricing.daily * 30 || space.pricing.hourly * 160;
 
         rentSpace(user?.id || '3', {
@@ -58,6 +66,44 @@ function MySpaces() {
         if (window.confirm(`Are you sure you want to cancel your rental for ${name}?`)) {
             cancelSpaceRental(id);
             toast.info(`Rental for ${name} cancelled.`);
+        }
+    };
+
+    const handleOpenAccess = (rental) => {
+        setSelectedRental(rental);
+        setShowAccessModal(true);
+    };
+
+    const handleAddAccess = async () => {
+        if (!newAccessName.trim()) return;
+
+        const currentAccess = selectedRental.access || [];
+        const updatedAccess = [...currentAccess, {
+            id: Date.now().toString(),
+            name: newAccessName,
+            joinedAt: new Date().toISOString()
+        }];
+
+        try {
+            await updateEmployerSpace(selectedRental.id, { access: updatedAccess });
+            // Update the local state of selected rental to reflect changes immediately
+            setSelectedRental({ ...selectedRental, access: updatedAccess });
+            setNewAccessName('');
+            toast.success(`Access granted to ${newAccessName}`);
+        } catch (error) {
+            toast.error('Failed to update access');
+        }
+    };
+
+    const handleRemoveAccess = async (accessId, name) => {
+        const updatedAccess = selectedRental.access.filter(a => a.id !== accessId);
+
+        try {
+            await updateEmployerSpace(selectedRental.id, { access: updatedAccess });
+            setSelectedRental({ ...selectedRental, access: updatedAccess });
+            toast.info(`Access removed for ${name}`);
+        } catch (error) {
+            toast.error('Failed to update access');
         }
     };
 
@@ -119,10 +165,18 @@ function MySpaces() {
                                     <span className="text-secondary">Rented Since</span>
                                     <span className="font-medium">{new Date(rental.rentedAt).toLocaleDateString()}</span>
                                 </div>
+                                <div className="flex items-center justify-between text-sm mt-2">
+                                    <span className="text-secondary">Active Access</span>
+                                    <span className="font-medium">{(rental.access || []).length} persons</span>
+                                </div>
                             </div>
 
                             <div className="mt-4 flex gap-2">
-                                <Button variant="secondary" className="flex-1">
+                                <Button
+                                    variant="secondary"
+                                    className="flex-1"
+                                    onClick={() => handleOpenAccess(rental)}
+                                >
                                     Manage Access
                                 </Button>
                             </div>
@@ -182,6 +236,65 @@ function MySpaces() {
                         ))}
                         {availableSpaces.length === 0 && (
                             <p className="text-center text-secondary py-4">No spaces found matching your search.</p>
+                        )}
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Manage Access Modal */}
+            <Modal
+                isOpen={showAccessModal}
+                onClose={() => setShowAccessModal(false)}
+                title={`Manage Access: ${selectedRental?.name}`}
+                className="max-w-md"
+            >
+                <div>
+                    <div className="mb-6 p-4 rounded-xl bg-primary-500/5 border border-primary-500/10 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-600">
+                            <Plus size={20} />
+                        </div>
+                        <div className="flex-1">
+                            <h4 className="text-sm font-bold">Grant New Access</h4>
+                            <div className="mt-2 flex gap-2">
+                                <Input
+                                    className="flex-1"
+                                    placeholder="Employee name..."
+                                    value={newAccessName}
+                                    onChange={(e) => setNewAccessName(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleAddAccess()}
+                                />
+                                <Button variant="primary" size="sm" onClick={handleAddAccess}>Add</Button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <h4 className="text-xs font-bold text-tertiary uppercase tracking-wider">People with Access</h4>
+                        {(!selectedRental?.access || selectedRental.access.length === 0) ? (
+                            <div className="text-center py-6 text-secondary bg-secondary/50 rounded-xl border border-dashed border-light">
+                                <p className="text-sm">No specific access granted yet.</p>
+                                <p className="text-[10px] mt-1">Add employees to allow them to use this space.</p>
+                            </div>
+                        ) : (
+                            selectedRental.access.map((person) => (
+                                <div key={person.id} className="flex items-center justify-between p-3 rounded-xl border border-light hover:bg-secondary/30 transition-colors">
+                                    <div className="flex items-center gap-3">
+                                        <Avatar name={person.name} size="sm" />
+                                        <div>
+                                            <p className="text-sm font-medium">{person.name}</p>
+                                            <p className="text-[10px] text-tertiary">Access since {new Date(person.joinedAt).toLocaleDateString()}</p>
+                                        </div>
+                                    </div>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="text-tertiary hover:text-error-500 p-1 h-auto"
+                                        onClick={() => handleRemoveAccess(person.id, person.name)}
+                                    >
+                                        <Trash2 size={14} />
+                                    </Button>
+                                </div>
+                            ))
                         )}
                     </div>
                 </div>
