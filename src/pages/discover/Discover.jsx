@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../../contexts/DataContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { CubeCard } from '../../components/ui/Card';
@@ -19,9 +19,12 @@ import {
 } from 'lucide-react';
 
 function Discover() {
+    const [searchParams, setSearchParams] = useSearchParams();
     const { agents, spaces, employers, toggleFavorite, isFavorite } = useData();
     const { theme, toggleTheme } = useTheme();
-    const [activeTab, setActiveTab] = useState('agents');
+
+    // Initialize from URL param if available
+    const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'agents');
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilters, setShowFilters] = useState(false);
     const [filters, setFilters] = useState({
@@ -29,6 +32,20 @@ function Discover() {
         category: '',
         priceRange: '',
     });
+
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        if (tab && (tab === 'agents' || tab === 'spaces' || tab === 'companies')) {
+            setActiveTab(tab);
+        }
+    }, [searchParams]);
+
+    const handleTabChange = (id) => {
+        setActiveTab(id);
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('tab', id);
+        setSearchParams(newParams);
+    };
 
     const tabs = [
         { id: 'agents', label: 'Agents', icon: Users },
@@ -169,7 +186,7 @@ function Discover() {
 
                     {/* Tabs */}
                     <div className="mt-4">
-                        <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
+                        <Tabs tabs={tabs} activeTab={activeTab} onChange={handleTabChange} />
                     </div>
                 </div>
             </header>

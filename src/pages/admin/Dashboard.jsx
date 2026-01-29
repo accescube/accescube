@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppLayout } from '../../components/layout/Navigation';
 import { useData } from '../../contexts/DataContext';
+import { useToast } from '../../contexts/ToastContext';
 import { Card, StatCard } from '../../components/ui/Card';
 import { Badge, Avatar } from '../../components/ui/Badge';
 import { Tabs } from '../../components/ui/Modal';
@@ -22,7 +23,10 @@ import {
 
 function AdminDashboard() {
     const { agents, spaces, employers, events } = useData();
+    const { toast } = useToast();
     const [activeTab, setActiveTab] = useState('overview');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [typeFilter, setTypeFilter] = useState('All Types');
 
     const tabs = [
         { id: 'overview', label: 'Overview' },
@@ -33,16 +37,26 @@ function AdminDashboard() {
 
     const stats = {
         revenue: { value: '$48,250', change: '+22%', type: 'positive' },
-        users: { value: '2,847', change: '+156', type: 'positive' },
-        cubes: { value: '892', change: '+43', type: 'positive' },
-        events: { value: '24', change: '8 upcoming', type: 'neutral' },
+        users: { value: (agents.length + spaces.length + employers.length).toString(), change: '+156', type: 'positive' },
+        cubes: { value: (agents.length + spaces.length).toString(), change: '+43', type: 'positive' },
+        events: { value: events.length.toString(), change: '8 upcoming', type: 'neutral' },
     };
 
-    const pendingApprovals = [
+    const [approvals, setApprovals] = useState([
         { id: 1, type: 'agent', name: 'John Smith', email: 'john@email.com', date: '2 hours ago' },
         { id: 2, type: 'space', name: 'Modern Offices Co', email: 'info@modern.com', date: '5 hours ago' },
         { id: 3, type: 'employer', name: 'StartupXYZ', email: 'hire@startup.com', date: '1 day ago' },
-    ];
+    ]);
+
+    const handleApprove = (id, name) => {
+        setApprovals(approvals.filter(a => a.id !== id));
+        toast.success(`${name} has been approved and notified.`);
+    };
+
+    const handleReject = (id, name) => {
+        setApprovals(approvals.filter(a => a.id !== id));
+        toast.info(`${name} request has been declined.`);
+    };
 
     const recentTransactions = [
         { id: 1, description: 'Agent Commission', user: 'Alex Johnson', amount: '+$127.50', type: 'income' },
@@ -104,34 +118,44 @@ function AdminDashboard() {
                         <Card>
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-lg font-semibold">Pending Approvals</h2>
-                                <Badge variant="warning">{pendingApprovals.length} pending</Badge>
+                                <Badge variant="warning">{approvals.length} pending</Badge>
                             </div>
 
                             <div className="space-y-4">
-                                {pendingApprovals.map((item) => (
-                                    <div key={item.id} className="flex items-center gap-4 p-4 rounded-xl bg-secondary">
-                                        <Avatar name={item.name} size="md" />
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-medium">{item.name}</span>
-                                                <Badge variant="neutral" className="capitalize">{item.type}</Badge>
+                                {approvals.length === 0 ? (
+                                    <p className="text-center py-8 text-secondary">No pending approvals.</p>
+                                ) : (
+                                    approvals.map((item) => (
+                                        <div key={item.id} className="flex items-center gap-4 p-4 rounded-xl bg-secondary">
+                                            <Avatar name={item.name} size="md" />
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-medium">{item.name}</span>
+                                                    <Badge variant="neutral" className="capitalize">{item.type}</Badge>
+                                                </div>
+                                                <p className="text-sm text-secondary">{item.email}</p>
                                             </div>
-                                            <p className="text-sm text-secondary">{item.email}</p>
+                                            <div className="text-sm text-tertiary">{item.date}</div>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    className="btn btn-ghost btn-icon text-success-500"
+                                                    onClick={() => handleApprove(item.id, item.name)}
+                                                >
+                                                    <Check size={18} />
+                                                </button>
+                                                <button
+                                                    className="btn btn-ghost btn-icon text-error-500"
+                                                    onClick={() => handleReject(item.id, item.name)}
+                                                >
+                                                    <X size={18} />
+                                                </button>
+                                                <button className="btn btn-ghost btn-icon">
+                                                    <Eye size={18} />
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div className="text-sm text-tertiary">{item.date}</div>
-                                        <div className="flex gap-2">
-                                            <button className="btn btn-ghost btn-icon text-success-500">
-                                                <Check size={18} />
-                                            </button>
-                                            <button className="btn btn-ghost btn-icon text-error-500">
-                                                <X size={18} />
-                                            </button>
-                                            <button className="btn btn-ghost btn-icon">
-                                                <Eye size={18} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                )}
                             </div>
                         </Card>
                     </div>
@@ -275,9 +299,16 @@ function AdminDashboard() {
                                     className="input pl-10"
                                     placeholder="Search..."
                                     style={{ width: '200px' }}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-                            <select className="input" style={{ width: 'auto' }}>
+                            <select
+                                className="input"
+                                style={{ width: 'auto' }}
+                                value={typeFilter}
+                                onChange={(e) => setTypeFilter(e.target.value)}
+                            >
                                 <option>All Types</option>
                                 <option>Agents</option>
                                 <option>Spaces</option>
@@ -286,9 +317,43 @@ function AdminDashboard() {
                         </div>
                     </div>
 
-                    <div className="text-center py-12 text-secondary">
-                        <Building2 size={48} className="mx-auto mb-4 opacity-50" />
-                        <p>Select filters to view {activeTab}</p>
+                    <div className="space-y-4">
+                        {(activeTab === 'users' ? [...agents, ...spaces, ...employers] : [...agents, ...spaces])
+                            .filter(item => {
+                                const matchesSearch = !searchQuery ||
+                                    item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    item.email?.toLowerCase().includes(searchQuery.toLowerCase());
+
+                                const type = agents.includes(item) ? 'Agents' : spaces.includes(item) ? 'Spaces' : 'Employers';
+                                const matchesType = typeFilter === 'All Types' || type === typeFilter;
+
+                                return matchesSearch && matchesType;
+                            })
+                            .slice(0, 10)
+                            .map((item, idx) => (
+                                <div key={item.id || idx} className="flex items-center gap-4 p-4 rounded-xl bg-secondary hover:bg-tertiary transition">
+                                    <Avatar name={item.name} size="sm" />
+                                    <div className="flex-1">
+                                        <div className="font-medium">{item.name}</div>
+                                        <div className="text-xs text-secondary">{item.email || item.location || 'Member'}</div>
+                                    </div>
+                                    <Badge variant="neutral">
+                                        {agents.includes(item) ? 'Agent' : spaces.includes(item) ? 'Space' : 'Employer'}
+                                    </Badge>
+                                    <div className="flex gap-1">
+                                        <Button variant="ghost" size="sm" icon={Eye} />
+                                        <Button variant="ghost" size="sm" icon={X} className="text-error-500" />
+                                    </div>
+                                </div>
+                            ))
+                        }
+
+                        {(activeTab === 'users' ? (agents.length + spaces.length + employers.length) : (agents.length + spaces.length)) === 0 && (
+                            <div className="text-center py-12 text-secondary">
+                                <Building2 size={48} className="mx-auto mb-4 opacity-50" />
+                                <p>No items found matching the criteria.</p>
+                            </div>
+                        )}
                     </div>
                 </Card>
             )}
