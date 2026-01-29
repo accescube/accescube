@@ -161,13 +161,28 @@ function AdminDashboard() {
                         <Card>
                             <h3 className="font-semibold mb-4">Quick Actions</h3>
                             <div className="space-y-2">
-                                <Button variant="secondary" className="w-full justify-start" icon={Users}>
+                                <Button
+                                    variant="secondary"
+                                    className="w-full justify-start"
+                                    icon={Users}
+                                    onClick={() => setActiveTab('users')}
+                                >
                                     Manage Users
                                 </Button>
-                                <Button variant="secondary" className="w-full justify-start" icon={Building2}>
+                                <Button
+                                    variant="secondary"
+                                    className="w-full justify-start"
+                                    icon={Building2}
+                                    onClick={() => setActiveTab('cubes')}
+                                >
                                     Review Cubes
                                 </Button>
-                                <Button variant="secondary" className="w-full justify-start" icon={TrendingUp}>
+                                <Button
+                                    variant="secondary"
+                                    className="w-full justify-start"
+                                    icon={TrendingUp}
+                                    onClick={() => setActiveTab('revenue')}
+                                >
                                     View Analytics
                                 </Button>
                             </div>

@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
 import { Card, StatCard, CubeCard } from '../../components/ui/Card';
 import { Badge, Avatar } from '../../components/ui/Badge';
+import { useToast } from '../../contexts/ToastContext';
 import Button from '../../components/ui/Button';
 import {
     DollarSign,
@@ -19,6 +20,7 @@ import {
 function EmployerDashboard() {
     const { user } = useAuth();
     const { agents, spaces, getHiredAgents, getEmployerSpaces } = useData();
+    const { toast } = useToast();
 
     const hiredAgents = getHiredAgents(user?.id || '3');
     const mySpaces = getEmployerSpaces(user?.id || '3');
@@ -157,15 +159,20 @@ function EmployerDashboard() {
                     <Card>
                         <h3 className="font-semibold mb-4">Quick Actions</h3>
                         <div className="space-y-2">
-                            <Link to="/employer/agents" className="btn btn-primary w-full justify-start">
+                            <Link to="/discover?tab=agents" className="btn btn-primary w-full justify-start">
                                 <Search size={18} className="mr-2" />
                                 Find Agents
                             </Link>
-                            <Link to="/employer/spaces" className="btn btn-secondary w-full justify-start">
+                            <Link to="/discover?tab=spaces" className="btn btn-secondary w-full justify-start">
                                 <Building2 size={18} className="mr-2" />
                                 Browse Spaces
                             </Link>
-                            <Button variant="secondary" className="w-full justify-start" icon={TrendingUp}>
+                            <Button
+                                variant="secondary"
+                                className="w-full justify-start"
+                                icon={TrendingUp}
+                                onClick={() => toast.info('Detailed reports coming soon!')}
+                            >
                                 View Reports
                             </Button>
                         </div>

@@ -230,7 +230,7 @@ function AgentDashboard() {
                             {upcomingTasks.map((task) => (
                                 <div key={task.id} className="flex items-start gap-3">
                                     <div className={`w-2 h-2 rounded-full mt-2 ${task.type === 'meeting' ? 'bg-primary-500' :
-                                            task.type === 'deadline' ? 'bg-error-500' : 'bg-success-500'
+                                        task.type === 'deadline' ? 'bg-error-500' : 'bg-success-500'
                                         }`} />
                                     <div>
                                         <p className="text-sm font-medium">{task.task}</p>
@@ -253,7 +253,12 @@ function AgentDashboard() {
                                 <MessageSquare size={18} />
                                 Messages {getUnreadCount() > 0 && <Badge variant="primary">{getUnreadCount()}</Badge>}
                             </Link>
-                            <Button variant="secondary" className="w-full justify-start" icon={TrendingUp}>
+                            <Button
+                                variant="secondary"
+                                className="w-full justify-start"
+                                icon={TrendingUp}
+                                onClick={() => toast.info('Earnings report downloaded successfully.')}
+                            >
                                 Earnings Report
                             </Button>
                         </div>

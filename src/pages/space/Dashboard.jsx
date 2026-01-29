@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { AppLayout } from '../../components/layout/Navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { useData } from '../../contexts/DataContext';
+import { useToast } from '../../contexts/ToastContext';
 import { Card, StatCard } from '../../components/ui/Card';
 import { Badge, Avatar } from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
@@ -20,6 +21,7 @@ import {
 function SpaceDashboard() {
     const { user } = useAuth();
     const { spaces, bookings } = useData();
+    const { toast } = useToast();
 
     // Use dynamic data
     const mySpaces = spaces.slice(0, 3);
@@ -139,7 +141,12 @@ function SpaceDashboard() {
                                 <Calendar size={18} className="mr-2" />
                                 View Calendar
                             </Link>
-                            <Button variant="secondary" className="w-full justify-start" icon={TrendingUp}>
+                            <Button
+                                variant="secondary"
+                                className="w-full justify-start"
+                                icon={TrendingUp}
+                                onClick={() => toast.info('Revenue report generated and sent to your email.')}
+                            >
                                 Revenue Report
                             </Button>
                         </div>
