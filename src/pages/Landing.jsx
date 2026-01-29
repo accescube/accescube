@@ -101,7 +101,7 @@ function Landing() {
                     </div>
 
                     {/* Stats */}
-                    <div className="flex flex-wrap justify-center gap-8 mt-12 animate-fade-in stagger-5">
+                    <div className="flex flex-wrap justify-center gap-12 mt-12 animate-fade-in stagger-5">
                         <div className="text-center">
                             <div className="text-3xl font-bold gradient-text">10K+</div>
                             <div className="text-sm text-secondary">Active Agents</div>
