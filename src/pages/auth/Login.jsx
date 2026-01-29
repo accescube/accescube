@@ -5,6 +5,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { Mail, Lock, Sun, Moon, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { Card } from '../../components/ui/Card';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -38,149 +39,121 @@ function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-primary p-4">
-            <div className="w-full max-w-6xl flex shadow-2xl rounded-3xl overflow-hidden bg-elevated border border-light animate-fade-in min-h-[600px]">
-                {/* Left Side: Form */}
-                <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center">
-                    <div className="flex items-center justify-between mb-12">
-                        <Link to="/" className="flex items-center gap-2 text-secondary hover:text-primary transition group">
-                            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-                            <span className="font-medium">Back</span>
-                        </Link>
-                        <button
-                            className="btn btn-ghost btn-icon"
-                            onClick={toggleTheme}
-                        >
-                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
+        <div className="min-h-screen flex items-center justify-center bg-secondary p-4 relative overflow-hidden">
+            {/* Background Decorative Elements */}
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-500/10 rounded-full blur-[120px]" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-500/10 rounded-full blur-[120px]" />
+
+            <Card className="w-[320px] p-5 shadow-card animate-fade-in relative z-10 flex flex-col items-center text-center">
+                {/* Header Row */}
+                <div className="w-full flex items-center justify-between mb-4">
+                    <Link to="/" className="flex items-center gap-1 text-secondary hover:text-primary transition group">
+                        <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                        <span className="text-[10px] font-medium">Back</span>
+                    </Link>
+                    <button className="btn btn-ghost btn-icon btn-sm" onClick={toggleTheme}>
+                        {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                    </button>
+                </div>
+
+                <div className="mb-4">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                        <img src="/cube.svg" alt="" style={{ width: 18, height: 18 }} />
+                        <span className="text-sm font-bold gradient-text">Accescube</span>
                     </div>
+                    <h1 className="text-lg font-bold">Welcome Back</h1>
+                </div>
 
-                    <div className="w-full max-w-sm mx-auto">
-                        <div className="text-center mb-10">
-                            <Link to="/" className="inline-flex items-center gap-3 mb-8 hover:scale-110 transition-transform">
-                                <img src="/cube.svg" alt="Accescube" className="w-16 h-16 drop-shadow-glow" />
-                            </Link>
-                            <h1 className="text-3xl font-bold mb-3 tracking-tight">Welcome Back</h1>
-                            <p className="text-secondary">Sign in to access your dashboard</p>
+                <form onSubmit={handleSubmit} className="w-full space-y-3">
+                    {error && (
+                        <div className="p-2 rounded-lg bg-error-500/10 border border-error-500/20 text-error-500 text-[10px] animate-scale-in">
+                            {error}
                         </div>
+                    )}
 
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                            {error && (
-                                <div className="p-4 rounded-xl bg-error-500/10 border border-error-500/20 text-error-500 text-sm animate-scale-in">
-                                    {error}
-                                </div>
-                            )}
-
-                            <Input
-                                label="Email address"
+                    <div className="space-y-2">
+                        <div className="input-icon relative text-sm">
+                            <Mail className="icon" size={16} />
+                            <input
                                 type="email"
-                                placeholder="name@company.com"
-                                icon={Mail}
+                                className="input py-2"
+                                placeholder="Email address"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
+                        </div>
 
-                            <div className="input-group">
-                                <label className="input-label">Password</label>
-                                <div className="input-icon relative">
-                                    <Lock className="icon" size={20} />
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        className="input"
-                                        placeholder="••••••••"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                        style={{ paddingRight: '3.5rem' }}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-tertiary hover:text-primary transition p-2"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between text-sm mt-1">
-                                <label className="flex items-center gap-2 cursor-pointer group">
-                                    <input type="checkbox" className="w-4 h-4 rounded border-light text-primary-500 focus:ring-primary-500" />
-                                    <span className="text-secondary group-hover:text-primary transition">Remember me</span>
-                                </label>
-                                <Link to="/forgot-password" name="forgot-password-link" className="text-primary-500 font-medium hover:underline decoration-2 underline-offset-4">
-                                    Forgot password?
-                                </Link>
-                            </div>
-
-                            <Button
-                                type="submit"
-                                variant="primary"
-                                className="w-full mt-4 py-4 text-lg"
-                                loading={loading}
+                        <div className="input-icon relative text-sm">
+                            <Lock className="icon" size={16} />
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                className="input py-2"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                style={{ paddingRight: '2.5rem' }}
+                            />
+                            <button
+                                type="button"
+                                className="absolute right-1 top-1/2 -translate-y-1/2 text-tertiary hover:text-primary transition p-2"
+                                onClick={() => setShowPassword(!showPassword)}
                             >
-                                Sign In
-                            </Button>
-                        </form>
-
-                        <div className="mt-8">
-                            <div className="relative flex items-center justify-center mb-6">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-light"></div>
-                                </div>
-                                <span className="relative px-4 text-xs text-tertiary bg-elevated uppercase tracking-widest">Demo Accounts</span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button
-                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
-                                    onClick={() => { setEmail('agent@test.com'); setPassword('password123'); }}
-                                >
-                                    Agent
-                                </button>
-                                <button
-                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
-                                    onClick={() => { setEmail('provider@test.com'); setPassword('password123'); }}
-                                >
-                                    Provider
-                                </button>
-                                <button
-                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
-                                    onClick={() => { setEmail('employer@test.com'); setPassword('password123'); }}
-                                >
-                                    Employer
-                                </button>
-                                <button
-                                    className="btn btn-ghost btn-sm text-xs py-2 h-auto"
-                                    onClick={() => { setEmail('admin@test.com'); setPassword('password123'); }}
-                                >
-                                    Admin
-                                </button>
-                            </div>
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
                         </div>
+                    </div>
 
-                        <div className="mt-8 text-center">
-                            <p className="text-secondary">
-                                New to Accescube?{' '}
-                                <Link to="/register" className="text-primary-500 font-bold hover:underline decoration-2 underline-offset-4">
-                                    Create account
-                                </Link>
-                            </p>
-                        </div>
+                    <div className="flex items-center justify-between text-[10px]">
+                        <label className="flex items-center gap-1.5 cursor-pointer text-secondary">
+                            <input type="checkbox" className="w-3.5 h-3.5 rounded" />
+                            <span>Stay signed in</span>
+                        </label>
+                        <Link to="/forgot-password" classname="text-primary-500 hover:underline">
+                            Forgot?
+                        </Link>
+                    </div>
+
+                    <div className="flex justify-center pt-1">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="px-8 py-2 text-sm font-bold"
+                            loading={loading}
+                        >
+                            Sign In
+                        </Button>
+                    </div>
+                </form>
+
+                <div className="w-full mt-4 pt-4 border-t border-light">
+                    <span className="block text-[9px] text-tertiary uppercase tracking-widest font-bold mb-3">Quick Demo</span>
+                    <div className="flex gap-2 justify-center">
+                        <button
+                            className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto"
+                            onClick={() => { setEmail('agent@test.com'); setPassword('password123'); }}
+                        >
+                            Agent
+                        </button>
+                        <button
+                            className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto"
+                            onClick={() => { setEmail('provider@test.com'); setPassword('password123'); }}
+                        >
+                            Provider
+                        </button>
                     </div>
                 </div>
 
-                {/* Right Side: Visual Panel */}
-                <div className="hidden lg:flex flex-1 bg-gradient-hero relative overflow-hidden items-center justify-center p-12">
-                    <div className="relative z-10 text-center text-white">
-                        <div className="text-8xl mb-10 animate-float drop-shadow-2xl">🧊</div>
-                        <h2 className="text-4xl font-extrabold mb-6 leading-tight">Your Digital HQ<br />Starts Here</h2>
-                        <p className="text-xl text-white/80 max-w-sm mx-auto leading-relaxed">
-                            Join the next-generation platform connecting professionals worldwide.
-                        </p>
-                    </div>
+                <div className="mt-4 text-center">
+                    <p className="text-[10px] text-secondary">
+                        New?{' '}
+                        <Link to="/register" className="text-primary-500 font-bold hover:underline">
+                            Create account
+                        </Link>
+                    </p>
                 </div>
-            </div>
+            </Card>
         </div>
     );
 }
