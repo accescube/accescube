@@ -20,7 +20,7 @@ import {
 
 function HiredAgents() {
     const { user } = useAuth();
-    const { hiredAgents, agents, getHiredAgents, hireAgent, removeHiredAgent } = useData();
+    const { hiredAgents, agents, getHiredAgents, hireAgent, removeHiredAgent, addAgent } = useData();
     const { toast } = useToast();
 
     const [showHireModal, setShowHireModal] = useState(false);

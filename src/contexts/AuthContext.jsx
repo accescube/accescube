@@ -105,8 +105,27 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const seedDemoUsers = async () => {
+        const demoUsers = [
+            { name: 'Demo Agent', email: 'agent@test.com', password: 'password123', role: 'agent' },
+            { name: 'Demo Provider', email: 'provider@test.com', password: 'password123', role: 'space' }
+        ];
+
+        for (const u of demoUsers) {
+            try {
+                await register(u);
+                console.log(`Registered ${u.email}`);
+            } catch (error) {
+                // If it already exists, that's fine
+                if (error.code !== 'auth/email-already-in-use') {
+                    console.error(`Error seeding ${u.email}:`, error);
+                }
+            }
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfile }}>
+        <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfile, seedDemoUsers }}>
             {!loading && children}
         </AuthContext.Provider>
     );

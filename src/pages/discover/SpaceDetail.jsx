@@ -185,7 +185,7 @@ function SpaceDetail() {
                                     <h1 className="text-2xl font-bold mb-2">{space.name}</h1>
                                     <p className="text-lg text-secondary capitalize">{space.type}</p>
                                 </div>
-                                <Rating value={space.rating} count={space.reviews} size="lg" />
+                                <Rating value={space.rating || 5.0} count={space.reviews || 0} size="lg" />
                             </div>
 
                             <div className="flex flex-wrap items-center gap-4 text-sm text-secondary">
@@ -199,7 +199,7 @@ function SpaceDetail() {
                                 </span>
                                 <span className="flex items-center gap-1">
                                     <Clock size={16} />
-                                    {space.operatingHours.open} - {space.operatingHours.close}
+                                    {space.operatingHours?.open || '08:00'} - {space.operatingHours?.close || '20:00'}
                                 </span>
                             </div>
                         </div>
@@ -217,7 +217,7 @@ function SpaceDetail() {
                         <div className="card p-6">
                             <h2 className="text-lg font-semibold mb-4">Amenities</h2>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                {space.amenities.map((amenity, i) => {
+                                {(space.amenities || []).map((amenity, i) => {
                                     const IconComponent = AMENITY_ICONS[amenity] || CheckCircle;
                                     return (
                                         <div key={i} className="flex items-center gap-3 text-sm">
@@ -228,6 +228,9 @@ function SpaceDetail() {
                                         </div>
                                     );
                                 })}
+                                {(!space.amenities || space.amenities.length === 0) && (
+                                    <p className="text-secondary text-sm">No specialized amenities listed.</p>
+                                )}
                             </div>
                         </div>
 

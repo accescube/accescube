@@ -61,7 +61,13 @@ function ProtectedRoute({ children, roles }) {
 function DashboardRouter() {
     const { user } = useAuth();
 
-    switch (user?.role) {
+    if (!user?.role) {
+        // If user is logged in but has no role (e.g. created via console)
+        // Redirect them to profile to complete their setup
+        return <Navigate to="/profile" replace />;
+    }
+
+    switch (user.role) {
         case 'agent':
             return <AgentDashboard />;
         case 'space':
@@ -71,7 +77,7 @@ function DashboardRouter() {
         case 'admin':
             return <AdminDashboard />;
         default:
-            return <Navigate to="/login" replace />;
+            return <Navigate to="/profile" replace />;
     }
 }
 

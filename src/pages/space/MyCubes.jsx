@@ -98,12 +98,17 @@ function MyCubes() {
                 ...(formData.priceMonthly && { monthly: parseInt(formData.priceMonthly) }),
             },
             // Default values for new spaces
-            rating: isEditing ? currentSpace.rating : 0,
+            rating: isEditing ? currentSpace.rating : 5.0,
             reviews: isEditing ? currentSpace.reviews : 0,
             images: [],
             amenities: ['WiFi', 'Coffee'], // Default amenities
             available: true,
             featured: false,
+            providerName: user?.name,
+            providerId: user?.id,
+            operatingHours: { open: '08:00', close: '20:00' },
+            createdAt: isEditing ? currentSpace.createdAt : new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         };
 
         if (isEditing) {

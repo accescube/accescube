@@ -177,13 +177,13 @@ function AgentDetail() {
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <Clock size={16} />
-                                            Responds {agent.responseTime}
+                                            Responds {agent.responseTime || 'within 24h'}
                                         </span>
-                                        <Rating value={agent.rating} count={agent.reviews} />
+                                        <Rating value={agent.rating || 5.0} count={agent.reviews || 0} />
                                     </div>
 
                                     <div className="flex flex-wrap gap-2">
-                                        {agent.skills.slice(0, 5).map((skill, i) => (
+                                        {(agent.skills || []).slice(0, 5).map((skill, i) => (
                                             <SkillBadge key={i}>{skill}</SkillBadge>
                                         ))}
                                     </div>
@@ -194,19 +194,22 @@ function AgentDetail() {
                         {/* About */}
                         <div className="card p-6">
                             <h2 className="text-lg font-semibold mb-4">About</h2>
-                            <p className="text-secondary leading-relaxed">{agent.bio}</p>
+                            <p className="text-secondary leading-relaxed">{agent.bio || 'No bio provided yet.'}</p>
                         </div>
 
                         {/* Portfolio */}
                         <div className="card p-6">
                             <h2 className="text-lg font-semibold mb-4">Portfolio</h2>
                             <div className="grid sm:grid-cols-2 gap-4">
-                                {agent.portfolio.map((item, i) => (
+                                {(agent.portfolio || []).map((item, i) => (
                                     <div key={i} className="p-4 rounded-xl bg-tertiary">
                                         <h3 className="font-medium mb-2">{item.title}</h3>
                                         <p className="text-sm text-secondary">{item.description}</p>
                                     </div>
                                 ))}
+                                {(!agent.portfolio || agent.portfolio.length === 0) && (
+                                    <p className="text-secondary text-sm col-span-2">No portfolio items added yet.</p>
+                                )}
                             </div>
                         </div>
 
@@ -214,18 +217,18 @@ function AgentDetail() {
                         <div className="card p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-lg font-semibold">Reviews</h2>
-                                <span className="text-secondary">{agent.reviews} reviews</span>
+                                <span className="text-secondary">{agent.reviews || 0} reviews</span>
                             </div>
 
                             <div className="flex items-center gap-4 p-4 rounded-xl bg-tertiary mb-6">
                                 <div className="text-center">
-                                    <div className="text-4xl font-bold">{agent.rating}</div>
+                                    <div className="text-4xl font-bold">{agent.rating || 5.0}</div>
                                     <div className="flex items-center gap-1 mt-1">
                                         {[1, 2, 3, 4, 5].map(i => (
                                             <Star
                                                 key={i}
                                                 size={16}
-                                                fill={i <= Math.round(agent.rating) ? 'var(--warning-400)' : 'none'}
+                                                fill={i <= Math.round(agent.rating || 5.0) ? 'var(--warning-400)' : 'none'}
                                                 color="var(--warning-400)"
                                             />
                                         ))}
@@ -239,7 +242,7 @@ function AgentDetail() {
                                             <div className="flex-1 progress h-2">
                                                 <div
                                                     className="progress-bar"
-                                                    style={{ width: `${stars === 5 ? 70 : stars === 4 ? 20 : stars === 3 ? 7 : 3}%` }}
+                                                    style={{ width: `${stars === 5 ? (agent.reviews > 0 ? 100 : 0) : 0}%` }}
                                                 />
                                             </div>
                                         </div>
@@ -285,16 +288,16 @@ function AgentDetail() {
                             <div className="space-y-4 mb-6">
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-secondary">Completed Projects</span>
-                                    <span className="font-semibold">{agent.completedProjects}</span>
+                                    <span className="font-semibold">{agent.completedProjects || 0}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-secondary">Response Time</span>
-                                    <span className="font-semibold">{agent.responseTime}</span>
+                                    <span className="font-semibold">{agent.responseTime || 'within 24h'}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-sm">
                                     <span className="text-secondary">Availability</span>
-                                    <Badge variant={agent.available ? 'success' : 'neutral'}>
-                                        {agent.available ? 'Available' : 'Busy'}
+                                    <Badge variant={agent.available !== false ? 'success' : 'neutral'}>
+                                        {agent.available !== false ? 'Available' : 'Busy'}
                                     </Badge>
                                 </div>
                             </div>

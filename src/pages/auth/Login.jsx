@@ -14,12 +14,12 @@ function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { login } = useAuth();
+    const { login, seedDemoUsers } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setError('');
         setLoading(true);
 
@@ -28,10 +28,37 @@ function Login() {
             navigate('/dashboard');
         } catch (err) {
             console.error("Login Error:", err);
-            // Show the actual error message from Firebase or a generic one
-            const message = err.message || 'Failed to sign in. Please check your credentials.';
-            // Clean up common firebase error prefixes
-            const displayMessage = message.replace('Firebase: ', '').replace('auth/', '');
+
+            // Try auto-seeding for demo accounts if not found
+            if ((email === 'agent@test.com' || email === 'provider@test.com') &&
+                (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential')) {
+                try {
+                    setError('Initializing demo account...');
+                    await seedDemoUsers();
+                    await login(email, password);
+                    navigate('/dashboard');
+                    return;
+                } catch (seedErr) {
+                    console.error("Seed error:", seedErr);
+                }
+            }
+
+            // Map common firebase errors to user-friendly messages
+            let displayMessage = 'Failed to sign in. Please check your credentials.';
+
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+                displayMessage = 'Invalid email or password.';
+
+                // Special check for demo accounts
+                if (email === 'agent@test.com' || email === 'provider@test.com') {
+                    displayMessage = `Demo account "${email}" not found. Please try registering first.`;
+                }
+            } else if (err.code === 'auth/too-many-requests') {
+                displayMessage = 'Too many failed attempts. Please try again later.';
+            } else {
+                displayMessage = err.message.replace('Firebase: ', '').replace('auth/', '');
+            }
+
             setError(displayMessage);
         } finally {
             setLoading(false);
@@ -64,9 +91,9 @@ function Login() {
                     <h1 className="text-lg font-bold">Welcome Back</h1>
                 </div>
 
-                <form onSubmit={handleSubmit} className="w-full space-y-3">
+                <form id="login-form" onSubmit={handleSubmit} className="w-full space-y-3">
                     {error && (
-                        <div className="p-2 rounded-lg bg-error-500/10 border border-error-500/20 text-error-500 text-[10px] animate-scale-in">
+                        <div className="p-3 rounded-lg bg-error-500/10 border border-error-500/20 text-error-500 text-[11px] animate-scale-in leading-relaxed">
                             {error}
                         </div>
                     )}
@@ -119,7 +146,7 @@ function Login() {
                         <Button
                             type="submit"
                             variant="primary"
-                            className="px-8 py-2 text-sm font-bold"
+                            className="px-8 py-2 text-sm font-bold w-full"
                             loading={loading}
                         >
                             Sign In
@@ -129,19 +156,33 @@ function Login() {
 
                 <div className="w-full mt-4 pt-4 border-t border-light">
                     <span className="block text-[9px] text-tertiary uppercase tracking-widest font-bold mb-3">Quick Demo</span>
-                    <div className="flex gap-2 justify-center">
-                        <button
-                            className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto"
-                            onClick={() => { setEmail('agent@test.com'); setPassword('password123'); }}
-                        >
-                            Agent
-                        </button>
-                        <button
-                            className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto"
-                            onClick={() => { setEmail('provider@test.com'); setPassword('password123'); }}
-                        >
-                            Provider
-                        </button>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex gap-2 justify-center">
+                            <button
+                                className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto flex-1"
+                                onClick={() => {
+                                    setEmail('agent@test.com');
+                                    setPassword('password123');
+                                    // Give state a moment to update or use specialized call
+                                    setTimeout(() => document.getElementById('login-form').requestSubmit(), 50);
+                                }}
+                            >
+                                Agent
+                            </button>
+                            <button
+                                className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto flex-1"
+                                onClick={() => {
+                                    setEmail('provider@test.com');
+                                    setPassword('password123');
+                                    setTimeout(() => document.getElementById('login-form').requestSubmit(), 50);
+                                }}
+                            >
+                                Provider
+                            </button>
+                        </div>
+                        <p className="text-[9px] text-tertiary leading-tight">
+                            Note: If these accounts don't exist, clicking them will automatically initialize them in your project.
+                        </p>
                     </div>
                 </div>
 
