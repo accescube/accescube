@@ -114,50 +114,7 @@ function Landing() {
                 </div>
             </section>
 
-            {/* Search Section — Below Hero */}
-            <section className="bg-elevated border-b border-medium shadow-md py-6 px-4 sticky top-0 z-40">
-                <div className="max-w-4xl mx-auto">
-                    <div className="flex border-b border-light mb-5">
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('agents')}
-                            className={`flex-1 py-3 text-center text-sm md:text-base font-bold border-b-2 transition flex items-center justify-center gap-2 ${
-                                activeTab === 'agents'
-                                    ? 'border-primary-500 text-primary-500'
-                                    : 'border-transparent text-secondary hover:text-primary'
-                            }`}
-                        >
-                            <Users size={18} /> Find Agents
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('spaces')}
-                            className={`flex-1 py-3 text-center text-sm md:text-base font-bold border-b-2 transition flex items-center justify-center gap-2 ${
-                                activeTab === 'spaces'
-                                    ? 'border-primary-500 text-primary-500'
-                                    : 'border-transparent text-secondary hover:text-primary'
-                            }`}
-                        >
-                            <Building2 size={18} /> Workspaces
-                        </button>
-                    </div>
-                    <form onSubmit={handleSearch} className="flex gap-3 flex-col sm:flex-row">
-                        <div className="relative flex-1">
-                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-tertiary" size={20} />
-                            <input
-                                type="text"
-                                placeholder={activeTab === 'agents' ? "Search skill, role, or username..." : "Search office, desk, or location..."}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3.5 bg-secondary text-base rounded-full text-primary placeholder-tertiary border border-medium focus:border-primary-500 focus:outline-none transition shadow-inner"
-                            />
-                        </div>
-                        <Button type="submit" variant="primary" className="!px-10 !py-3.5 !rounded-full !text-base shadow-md hover:shadow-lg font-bold w-full sm:w-auto">
-                            Search
-                        </Button>
-                    </form>
-                </div>
-            </section>
+
 
             {/* Quick Action Cards */}
             <section className="max-w-6xl mx-auto px-4 py-16 relative z-20">
