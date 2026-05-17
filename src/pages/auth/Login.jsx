@@ -4,11 +4,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { Mail, Lock, Sun, Moon, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, Sun, Moon, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 
 function Login() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
@@ -24,18 +24,18 @@ function Login() {
         setLoading(true);
 
         try {
-            await login(email, password);
+            await login(username, password);
             navigate('/dashboard');
         } catch (err) {
             console.error("Login Error:", err);
 
             // Try auto-seeding for demo accounts if not found
-            if ((email === 'agent@test.com' || email === 'provider@test.com') &&
+            if ((username === 'agent' || username === 'provider') &&
                 (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential')) {
                 try {
                     setError('Initializing demo account...');
                     await seedDemoUsers();
-                    await login(email, password);
+                    await login(username, password);
                     navigate('/dashboard');
                     return;
                 } catch (seedErr) {
@@ -50,8 +50,8 @@ function Login() {
                 displayMessage = 'Invalid email or password.';
 
                 // Special check for demo accounts
-                if (email === 'agent@test.com' || email === 'provider@test.com') {
-                    displayMessage = `Demo account "${email}" not found. Please try registering first.`;
+                if (username === 'agent' || username === 'provider') {
+                    displayMessage = `Demo account "${username}" not found. Please try registering first.`;
                 }
             } else if (err.code === 'auth/too-many-requests') {
                 displayMessage = 'Too many failed attempts. Please try again later.';
@@ -100,13 +100,13 @@ function Login() {
 
                     <div className="space-y-2">
                         <div className="input-icon relative text-sm">
-                            <Mail className="icon" size={16} />
+                            <User className="icon" size={16} />
                             <input
-                                type="email"
+                                type="text"
                                 className="input py-2"
-                                placeholder="Email address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
                                 required
                             />
                         </div>
@@ -161,7 +161,7 @@ function Login() {
                             <button
                                 className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto flex-1"
                                 onClick={() => {
-                                    setEmail('agent@test.com');
+                                    setUsername('agent');
                                     setPassword('password123');
                                     // Give state a moment to update or use specialized call
                                     setTimeout(() => document.getElementById('login-form').requestSubmit(), 50);
@@ -172,7 +172,7 @@ function Login() {
                             <button
                                 className="btn btn-secondary btn-sm text-[10px] py-1 px-4 h-auto flex-1"
                                 onClick={() => {
-                                    setEmail('provider@test.com');
+                                    setUsername('provider');
                                     setPassword('password123');
                                     setTimeout(() => document.getElementById('login-form').requestSubmit(), 50);
                                 }}

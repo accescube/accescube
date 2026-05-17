@@ -39,7 +39,7 @@ function Register() {
     const [role, setRole] = useState(searchParams.get('role') || '');
     const [formData, setFormData] = useState({
         name: '',
-        email: '',
+        username: '',
         password: '',
         confirmPassword: '',
     });
@@ -74,7 +74,7 @@ function Register() {
         try {
             await register({
                 name: formData.name,
-                email: formData.email,
+                username: formData.username,
                 password: formData.password,
                 role: role,
             });
@@ -193,12 +193,12 @@ function Register() {
                                     />
 
                                     <Input
-                                        label="Email"
-                                        type="email"
-                                        placeholder="you@example.com"
-                                        icon={Mail}
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        label="Username"
+                                        type="text"
+                                        placeholder="choose_a_username"
+                                        icon={User}
+                                        value={formData.username}
+                                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                                         required
                                     />
 

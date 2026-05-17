@@ -30,24 +30,23 @@ function Landing() {
         <div className="min-h-screen">
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 glass z-50">
-                <div className="container flex items-center justify-between py-4">
-                    <Link to="/" className="flex items-center gap-3">
-                        <img src="/cube.svg" alt="Accescube" style={{ width: 36, height: 36 }} />
-                        <span className="text-xl font-bold gradient-text">Accescube</span>
+                <div className="container flex items-center justify-between py-3 md:py-4 gap-2">
+                    <Link to="/" className="flex items-center shrink-0">
+                        <span className="text-xl md:text-2xl font-black tracking-tighter" style={{ textTransform: 'uppercase', color: 'var(--primary-500)' }}>ACCESCUBE</span>
                     </Link>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 md:gap-6">
                         <button
-                            className="btn btn-ghost btn-icon"
+                            className="p-2 text-secondary hover:text-white transition-colors"
                             onClick={toggleTheme}
                             aria-label="Toggle theme"
                         >
-                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                         </button>
-                        <Link to="/login" className="btn btn-ghost hidden sm:flex">
+                        <Link to="/login" className="font-semibold text-xs md:text-sm hover:text-primary transition-colors hidden sm:block">
                             Login
                         </Link>
-                        <Link to="/register" className="btn btn-primary">
+                        <Link to="/register" className="btn btn-primary !text-[10px] md:!text-sm !py-2 md:!py-3 !px-4 md:!px-8 shadow-glow whitespace-nowrap">
                             Get Started
                         </Link>
                     </div>
@@ -63,14 +62,13 @@ function Landing() {
                     </div>
 
                     <h1 className="hero-title">
-                        Connect. Collaborate.
+                        Building the Future of
                         <br />
-                        <span className="gradient-text">Create Together.</span>
+                        <span className="text-primary-500">Business Collaboration.</span>
                     </h1>
 
-                    <p className="hero-description">
-                        Accescube connects talented agents, innovative employers, and premium co-working spaces
-                        in one powerful ecosystem. Build your cube, grow your network, scale your success.
+                    <p className="hero-description text-xl opacity-70">
+                        Join the elite ecosystem connecting top agencies, innovative employers, and premium workspaces.
                     </p>
 
                     {/* Search Bar */}
@@ -85,62 +83,63 @@ function Landing() {
                         />
                     </div>
 
-                    <div className="hero-cta">
+                    <div className="hero-cta mb-16">
                         <Link to="/register?role=agent" className="btn btn-primary btn-lg">
                             <Users size={20} />
                             I'm an Agent
                         </Link>
-                        <Link to="/register?role=space" className="btn btn-outline btn-lg">
+                        <Link to="/register?role=space" className="btn btn-secondary btn-lg">
                             <Building2 size={20} />
                             List My Space
                         </Link>
-                        <Link to="/register?role=employer" className="btn btn-secondary btn-lg">
+                        <Link to="/register?role=employer" className="btn btn-primary btn-lg">
                             <Briefcase size={20} />
                             Hire Talent
                         </Link>
                     </div>
 
                     {/* Stats */}
-                    <div className="flex flex-wrap justify-center gap-12 mt-12 animate-fade-in stagger-5">
-                        <div className="text-center">
-                            <div className="text-3xl font-bold gradient-text">10K+</div>
-                            <div className="text-sm text-secondary">Active Agents</div>
+                    <div className="flex flex-wrap justify-center gap-8 md:gap-16 mt-16 md:mt-24 border-t border-light pt-12 md:pt-16">
+                        <div className="text-center group flex-1 min-w-[120px]">
+                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-cyan transition-colors">10K+</div>
+                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Elite Agents</div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-3xl font-bold gradient-text">500+</div>
-                            <div className="text-sm text-secondary">Workspaces</div>
+                        <div className="text-center group flex-1 min-w-[120px]">
+                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-violet transition-colors">500+</div>
+                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Workspaces</div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-3xl font-bold gradient-text">2K+</div>
-                            <div className="text-sm text-secondary">Companies</div>
+                        <div className="text-center group flex-1 min-w-[120px]">
+                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-pink transition-colors">2K+</div>
+                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Companies</div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-3xl font-bold gradient-text">$5M+</div>
-                            <div className="text-sm text-secondary">Transactions</div>
+                        <div className="text-center group flex-1 min-w-[120px]">
+                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-cyan transition-colors">$5M+</div>
+                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Volume</div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Features Section */}
-            <section className="features-section">
+            <section className="py-32 bg-secondary border-y border-light">
                 <div className="container">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Accescube?</h2>
-                        <p className="text-secondary max-w-2xl mx-auto">
-                            The all-in-one platform for modern professionals and businesses
+                    <div className="text-center mb-24">
+                        <h2 className="text-5xl md:text-6xl font-black mb-8 leading-tight">
+                            Elevate Your <span className="text-gradient">Business Game.</span>
+                        </h2>
+                        <p className="text-secondary text-xl max-w-3xl mx-auto">
+                            Stop settling. Start scaling with the world's most advanced professional ecosystem.
                         </p>
                     </div>
 
                     <div className="feature-grid">
-                        <div className="feature-card">
-                            <div className="feature-icon">
+                        <div className="feature-card group">
+                            <div className="feature-icon bg-zinc-900 group-hover:bg-primary-500 text-white transition-colors">
                                 <Users size={28} />
                             </div>
-                            <h3 className="feature-title">Agent Cubes</h3>
-                            <p className="feature-description">
-                                Create your personal business cube. Showcase skills, set pricing,
-                                receive leads, and grow your professional brand.
+                            <h3 className="feature-title text-2xl">Elite Agents</h3>
+                            <p className="feature-description text-base">
+                                Access a curated network of top-tier professional agents ready to scale your business.
                             </p>
                         </div>
 
@@ -226,19 +225,19 @@ function Landing() {
             </section>
 
             {/* Featured Spaces */}
-            <section className="py-16 bg-secondary">
+            <section className="py-24 border-t border-medium">
                 <div className="container">
-                    <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center justify-between mb-12">
                         <div>
-                            <h2 className="text-2xl md:text-3xl font-bold">Featured Spaces</h2>
-                            <p className="text-secondary">Find your perfect workspace</p>
+                            <h2 className="text-4xl font-black">Premium Spaces</h2>
+                            <p className="text-secondary mt-2">Elite workspaces for elite professionals.</p>
                         </div>
-                        <Link to="/discover?tab=spaces" className="btn btn-ghost">
-                            View All <ArrowRight size={18} />
+                        <Link to="/discover?tab=spaces" className="btn btn-outline">
+                            Browse All <ArrowRight size={18} />
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {spaces.filter(s => s.featured).slice(0, 4).map((space) => (
                             <CubeCard
                                 key={space.id}
@@ -327,8 +326,8 @@ function Landing() {
                 <div className="footer-grid">
                     <div className="footer-brand">
                         <div className="flex items-center gap-3 mb-4">
-                            <img src="/cube.svg" alt="Accescube" style={{ width: 32, height: 32 }} />
-                            <span className="text-lg font-bold">Accescube</span>
+                            <img src="/cube.svg" alt="ACCESCUBE" style={{ width: 32, height: 32 }} />
+                            <span className="text-lg font-extrabold tracking-wider" style={{ textTransform: 'uppercase' }}>ACCESCUBE</span>
                         </div>
                         <p className="text-sm text-secondary mb-4">
                             The next-generation platform connecting agents, employers, and workspaces.

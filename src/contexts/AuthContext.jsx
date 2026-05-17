@@ -46,13 +46,15 @@ export function AuthProvider({ children }) {
         return unsubscribe;
     }, []);
 
-    const login = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
+    const login = (username, password) => {
+        const dummyEmail = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}@accescube.local`;
+        return signInWithEmailAndPassword(auth, dummyEmail, password);
     };
 
     const register = async (userData) => {
         // 1. Create user in Firebase Auth
-        const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+        const dummyEmail = `${userData.username.toLowerCase().replace(/[^a-z0-9]/g, '')}@accescube.local`;
+        const userCredential = await createUserWithEmailAndPassword(auth, dummyEmail, userData.password);
         const firebaseUser = userCredential.user;
 
         // 2. Prepare profile data (exclude password)
@@ -107,18 +109,18 @@ export function AuthProvider({ children }) {
 
     const seedDemoUsers = async () => {
         const demoUsers = [
-            { name: 'Demo Agent', email: 'agent@test.com', password: 'password123', role: 'agent' },
-            { name: 'Demo Provider', email: 'provider@test.com', password: 'password123', role: 'space' }
+            { name: 'Demo Agent', username: 'agent', password: 'password123', role: 'agent' },
+            { name: 'Demo Provider', username: 'provider', password: 'password123', role: 'space' }
         ];
 
         for (const u of demoUsers) {
             try {
                 await register(u);
-                console.log(`Registered ${u.email}`);
+                console.log(`Registered ${u.username}`);
             } catch (error) {
                 // If it already exists, that's fine
                 if (error.code !== 'auth/email-already-in-use') {
-                    console.error(`Error seeding ${u.email}:`, error);
+                    console.error(`Error seeding ${u.username}:`, error);
                 }
             }
         }

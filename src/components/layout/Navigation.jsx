@@ -116,8 +116,7 @@ export function Sidebar() {
     return (
         <aside className="sidebar">
             <div className="sidebar-logo">
-                <img src="/cube.svg" alt="Accescube" />
-                <span className="sidebar-logo-text">Accescube</span>
+                <span className="sidebar-logo-text" style={{ textTransform: 'uppercase', fontWeight: 900, letterSpacing: '-0.02em', fontSize: '1.5rem', color: 'var(--primary-500)' }}>ACCESCUBE</span>
             </div>
 
             <nav className="sidebar-nav">

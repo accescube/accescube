@@ -1,4 +1,4 @@
-import { Heart, Star, MapPin } from 'lucide-react';
+import { Heart, Star, MapPin, Users, Building2, Briefcase } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function CubeCard({
@@ -7,6 +7,7 @@ export function CubeCard({
     onFavorite,
     isFavorite = false,
 }) {
+    // ... existing helpers ...
     const getLink = () => {
         switch (type) {
             case 'agent': return `/discover/agents/${data.id}`;
@@ -50,9 +51,9 @@ export function CubeCard({
         <Link to={getLink()} className="cube-card card-interactive">
             <div className="cube-card-image">
                 <div className="flex items-center justify-center h-full text-5xl" style={{ background: 'var(--gradient-card)' }}>
-                    {type === 'agent' && '👤'}
-                    {type === 'space' && '🏢'}
-                    {type === 'employer' && '🏛️'}
+                    {type === 'agent' && <Users size={48} className="text-primary-500 opacity-80" />}
+                    {type === 'space' && <Building2 size={48} className="text-primary-500 opacity-80" />}
+                    {type === 'employer' && <Briefcase size={48} className="text-primary-500 opacity-80" />}
                 </div>
 
                 {badge && (
