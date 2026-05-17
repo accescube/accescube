@@ -4,32 +4,30 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
 import {
-    Mail, Lock, User, Building2, Briefcase, Sun, Moon,
-    ArrowLeft, ArrowRight, Users, Check
+    Lock, User, Building2, Briefcase, Sun, Moon,
+    ArrowLeft, Users, Check
 } from 'lucide-react';
 
 const ROLES = [
     {
         id: 'agent',
         title: 'Agent',
-        description: 'Offer your services and skills',
-        icon: Users,
-        features: ['Create personal cube', 'List services', 'Accept leads', 'Earn money']
+        description: 'Offer your professional services and skills',
+        icon: Users
     },
     {
         id: 'space',
         title: 'Space Provider',
-        description: 'List your workspace',
-        icon: Building2,
-        features: ['List workspaces', 'Manage bookings', 'Set pricing', 'Track revenue']
+        description: 'List your desk, cabin, or workspace',
+        icon: Building2
     },
     {
         id: 'employer',
         title: 'Employer',
-        description: 'Build your virtual company',
-        icon: Briefcase,
-        features: ['Create company cube', 'Hire agents', 'Rent spaces', 'Manage projects']
+        description: 'Hire skilled talent and manage projects',
+        icon: Briefcase
     },
 ];
 
@@ -81,9 +79,7 @@ function Register() {
             navigate('/dashboard');
         } catch (err) {
             console.error("Registration Error:", err);
-            // Show the actual error message from Firebase
             const message = err.message || 'Registration failed. Please try again.';
-            // Clean up common firebase error prefixes
             const displayMessage = message.replace('Firebase: ', '').replace('auth/', '');
             setError(displayMessage);
         } finally {
@@ -92,194 +88,158 @@ function Register() {
     };
 
     return (
-        <div className="min-h-screen flex w-full">
-            {/* Left Panel - Form */}
-            <div className="flex-1 flex flex-col p-6 lg:p-12 w-full max-w-full lg:max-w-[50%] z-10">
-                <div className="flex items-center justify-between mb-8">
+        <div className="min-h-screen flex items-center justify-center bg-secondary p-4 relative overflow-hidden font-ui">
+            <Card className="w-full max-w-[420px] p-6 shadow-xl animate-scale-in relative z-10 flex flex-col border border-light rounded-2xl bg-elevated text-primary">
+                {/* Header Row */}
+                <div className="w-full flex items-center justify-between mb-6 border-b border-light pb-4">
                     <button
                         onClick={() => step === 1 ? navigate('/') : setStep(1)}
-                        className="flex items-center gap-2 text-secondary hover:text-primary transition"
+                        className="flex items-center gap-1.5 text-xs font-semibold text-secondary hover:text-primary transition"
                     >
-                        <ArrowLeft size={20} />
-                        <span>{step === 1 ? 'Back' : 'Choose Role'}</span>
+                        <ArrowLeft size={16} />
+                        <span>{step === 1 ? 'Back to Home' : 'Change Role'}</span>
                     </button>
                     <button
-                        className="btn btn-ghost btn-icon"
+                        className="p-1.5 rounded-full text-secondary hover:text-primary hover:bg-secondary transition"
                         onClick={toggleTheme}
+                        aria-label="Toggle theme"
                     >
-                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                     </button>
                 </div>
 
-                <div className="flex-1 flex items-center justify-center w-full">
-                    <div className="w-full max-w-lg mx-auto">
-                        {/* Step 1: Role Selection */}
-                        {step === 1 && (
-                            <>
-                                <div className="text-center mb-8">
-                                    <Link to="/" className="inline-flex items-center gap-3 mb-6">
-                                        <img src="/cube.svg" alt="Accescube" style={{ width: 48, height: 48 }} />
-                                    </Link>
-                                    <h1 className="text-2xl font-bold mb-2">Join Accescube</h1>
-                                    <p className="text-secondary">Choose how you want to use the platform</p>
-                                </div>
-
-                                <div className="grid gap-4">
-                                    {ROLES.map((r) => (
-                                        <button
-                                            key={r.id}
-                                            onClick={() => handleRoleSelect(r.id)}
-                                            className={`card card-interactive text-left p-6 ${role === r.id ? 'border-primary-500' : ''}`}
-                                        >
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-12 h-12 rounded-xl bg-gradient flex items-center justify-center text-white shrink-0">
-                                                    <r.icon size={24} />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <h3 className="font-semibold text-lg mb-1">{r.title}</h3>
-                                                    <p className="text-secondary text-sm mb-3">{r.description}</p>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {r.features.map((f, i) => (
-                                                            <span key={i} className="badge badge-neutral text-xs">
-                                                                {f}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <ArrowRight size={20} className="text-tertiary" />
-                                            </div>
-                                        </button>
-                                    ))}
-                                </div>
-
-                                <div className="mt-6 text-center">
-                                    <p className="text-secondary">
-                                        Already have an account?{' '}
-                                        <Link to="/login" className="text-primary-500 font-medium hover:underline">
-                                            Sign in
-                                        </Link>
-                                    </p>
-                                </div>
-                            </>
-                        )}
-
-                        {/* Step 2: Account Details */}
-                        {step === 2 && (
-                            <>
-                                <div className="text-center mb-8">
-                                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 text-primary-500 text-sm font-medium mb-4">
-                                        <Check size={16} />
-                                        {ROLES.find(r => r.id === role)?.title}
-                                    </div>
-                                    <h1 className="text-2xl font-bold mb-2">Create Your Account</h1>
-                                    <p className="text-secondary">Fill in your details to get started</p>
-                                </div>
-
-                                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                                    {error && (
-                                        <div className="p-4 rounded-lg bg-error-500/10 border border-error-500/30 text-error-500 text-sm">
-                                            {error}
-                                        </div>
-                                    )}
-
-                                    <Input
-                                        label={role === 'space' ? 'Space Name' : role === 'employer' ? 'Company Name' : 'Full Name'}
-                                        type="text"
-                                        placeholder={role === 'space' ? 'Your Space Name' : role === 'employer' ? 'Your Company' : 'John Doe'}
-                                        icon={User}
-                                        value={formData.name}
-                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        required
-                                    />
-
-                                    <Input
-                                        label="Username"
-                                        type="text"
-                                        placeholder="choose_a_username"
-                                        icon={User}
-                                        value={formData.username}
-                                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                        required
-                                    />
-
-                                    <Input
-                                        label="Password"
-                                        type="password"
-                                        placeholder="Create a password"
-                                        icon={Lock}
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        required
-                                    />
-
-                                    <Input
-                                        label="Confirm Password"
-                                        type="password"
-                                        placeholder="Confirm your password"
-                                        icon={Lock}
-                                        value={formData.confirmPassword}
-                                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                        required
-                                    />
-
-                                    <label className="flex items-start gap-3 cursor-pointer mt-2">
-                                        <input type="checkbox" className="w-5 h-5 mt-0.5 rounded" required />
-                                        <span className="text-sm text-secondary">
-                                            I agree to the{' '}
-                                            <a href="#" className="text-primary-500 hover:underline">Terms of Service</a>
-                                            {' '}and{' '}
-                                            <a href="#" className="text-primary-500 hover:underline">Privacy Policy</a>
-                                        </span>
-                                    </label>
-
-                                    <Button
-                                        type="submit"
-                                        variant="primary"
-                                        className="w-full mt-2"
-                                        loading={loading}
-                                    >
-                                        Create Account
-                                    </Button>
-                                </form>
-
-                                <div className="mt-6 text-center">
-                                    <p className="text-secondary">
-                                        Already have an account?{' '}
-                                        <Link to="/login" className="text-primary-500 font-medium hover:underline">
-                                            Sign in
-                                        </Link>
-                                    </p>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Right Panel */}
-            <div className="hidden lg:flex flex-1 bg-gradient-hero relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center text-white p-12">
-                        <div className="text-6xl mb-6 animate-float">
-                            {role === 'agent' && '👤'}
-                            {role === 'space' && '🏢'}
-                            {role === 'employer' && '🏛️'}
-                            {!role && '✨'}
+                <div className="text-center mb-6">
+                    <div className="inline-flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold text-sm">
+                            A
                         </div>
-                        <h2 className="text-3xl font-bold mb-4">
-                            {role ? `Welcome, ${ROLES.find(r => r.id === role)?.title}!` : 'Start Your Journey'}
-                        </h2>
-                        <p className="text-lg opacity-90 max-w-md">
-                            {role === 'agent' && 'Showcase your skills and connect with clients worldwide'}
-                            {role === 'space' && 'Turn your workspace into a thriving business hub'}
-                            {role === 'employer' && 'Build your dream team with top talent from Accescube'}
-                            {!role && 'Choose your path and unlock your potential'}
-                        </p>
+                        <span className="text-base font-bold tracking-tight text-primary">Accescube</span>
                     </div>
+                    <h1 className="text-xl font-bold tracking-tight mb-1">Create Account</h1>
+                    <p className="text-xs text-secondary">
+                        {step === 1 ? 'Select your primary account profile' : `Complete your ${ROLES.find(r => r.id === role)?.title} profile`}
+                    </p>
                 </div>
-                <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-white/10 animate-float" />
-                <div className="absolute bottom-20 right-20 w-32 h-32 rounded-full bg-white/10 animate-float" style={{ animationDelay: '1s' }} />
-            </div>
+
+                {/* Step 1: Role Selection */}
+                {step === 1 && (
+                    <div className="space-y-3 mb-4">
+                        {ROLES.map((r) => {
+                            const Icon = r.icon;
+                            return (
+                                <button
+                                    key={r.id}
+                                    onClick={() => handleRoleSelect(r.id)}
+                                    className={`w-full p-4 rounded-xl text-left border transition flex items-center gap-4 ${
+                                        role === r.id
+                                            ? 'border-primary-500 bg-primary-500/10 text-primary-500 shadow-sm'
+                                            : 'border-light bg-secondary hover:border-medium text-primary'
+                                    }`}
+                                >
+                                    <div className="w-10 h-10 rounded-full bg-primary-500/10 text-primary-500 flex items-center justify-center shrink-0">
+                                        <Icon size={20} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="font-bold text-sm mb-0.5 text-primary">{r.title}</h3>
+                                        <p className="text-xs text-secondary">{r.description}</p>
+                                    </div>
+                                </button>
+                            );
+                        })}
+
+                        <div className="pt-4 text-center border-t border-light mt-6">
+                            <p className="text-xs text-secondary">
+                                Already have an account?{' '}
+                                <Link to="/login" className="text-primary-500 font-bold hover:underline">
+                                    Sign in
+                                </Link>
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Step 2: Account Details */}
+                {step === 2 && (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {error && (
+                            <div className="p-3 rounded-lg bg-error-500/10 border border-error-500/20 text-error-500 text-xs">
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-500/10 text-primary-500 text-xs font-semibold mb-1">
+                            <Check size={14} /> Selected: {ROLES.find(r => r.id === role)?.title}
+                        </div>
+
+                        <Input
+                            label={role === 'space' ? 'Space Name' : role === 'employer' ? 'Company Name' : 'Full Name'}
+                            type="text"
+                            placeholder={role === 'space' ? 'Your Workspace Name' : role === 'employer' ? 'Company Name' : 'John Doe'}
+                            icon={User}
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            required
+                        />
+
+                        <Input
+                            label="Username"
+                            type="text"
+                            placeholder="choose_username"
+                            icon={User}
+                            value={formData.username}
+                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            required
+                        />
+
+                        <Input
+                            label="Password"
+                            type="password"
+                            placeholder="Create a password (min 6 chars)"
+                            icon={Lock}
+                            value={formData.password}
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            required
+                        />
+
+                        <Input
+                            label="Confirm Password"
+                            type="password"
+                            placeholder="Confirm your password"
+                            icon={Lock}
+                            value={formData.confirmPassword}
+                            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                            required
+                        />
+
+                        <label className="flex items-start gap-2.5 cursor-pointer pt-1">
+                            <input type="checkbox" className="w-4 h-4 mt-0.5 rounded text-primary-500" required />
+                            <span className="text-xs text-secondary leading-tight">
+                                I agree to the <a href="#" className="text-primary-500 hover:underline">Terms of Service</a> and <a href="#" className="text-primary-500 hover:underline">Privacy Policy</a>
+                            </span>
+                        </label>
+
+                        <div className="pt-2">
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                className="w-full py-3 font-bold shadow-md text-sm"
+                                loading={loading}
+                            >
+                                Complete Registration
+                            </Button>
+                        </div>
+
+                        <div className="text-center pt-2 border-t border-light">
+                            <p className="text-xs text-secondary">
+                                Already have an account?{' '}
+                                <Link to="/login" className="text-primary-500 font-bold hover:underline">
+                                    Sign in
+                                </Link>
+                            </p>
+                        </div>
+                    </form>
+                )}
+            </Card>
         </div>
     );
 }
