@@ -36,35 +36,35 @@ function Landing() {
 
     return (
         <div className="min-h-screen bg-secondary text-primary font-ui">
-            {/* WhatsApp Inspired Top Header */}
-            <header className="sticky top-0 z-50 bg-primary-500 text-white shadow-md">
-                <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            {/* Transparent Floating Header */}
+            <header className="absolute top-0 w-full z-50 bg-transparent border-b border-white/10">
+                <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-white text-primary-500 flex items-center justify-center font-bold text-xl shadow-sm">
+                        <div className="w-10 h-10 rounded-full bg-white text-primary-600 flex items-center justify-center font-bold text-xl shadow-lg">
                             A
                         </div>
-                        <Link to="/" className="font-bold text-lg tracking-tight">
+                        <Link to="/" className="font-bold text-xl tracking-tight text-white drop-shadow-md">
                             Accescube
                         </Link>
                     </div>
 
-                    <div className="flex items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-3 md:gap-5">
                         <button
                             onClick={toggleTheme}
                             aria-label="Toggle theme"
-                            className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition"
+                            className="p-2.5 text-white/90 hover:text-white hover:bg-white/20 rounded-full transition backdrop-blur-sm"
                         >
-                            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                         </button>
                         <Link
                             to="/login"
-                            className="text-sm font-medium px-3 py-1.5 hover:bg-white/10 rounded-full transition hidden sm:block"
+                            className="text-sm font-semibold text-white px-4 py-2 hover:bg-white/20 rounded-full transition backdrop-blur-sm hidden sm:block"
                         >
                             Sign in
                         </Link>
                         <Link
                             to="/register"
-                            className="bg-white text-primary-600 font-semibold text-xs md:text-sm px-5 py-2 rounded-full shadow-sm hover:bg-primary-100 transition"
+                            className="bg-white text-primary-600 font-bold text-sm px-6 py-2.5 rounded-full shadow-lg hover:bg-primary-50 transition hover:scale-105 transform duration-200"
                         >
                             Get Started
                         </Link>
@@ -152,7 +152,7 @@ function Landing() {
             </section>
 
             {/* Quick Action Cards (WhatsApp Style Panel) */}
-            <section className="max-w-6xl mx-auto px-4 -mt-12 relative z-20 mb-16">
+            <section className="max-w-6xl mx-auto px-4 py-16 relative z-20">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-elevated p-8 rounded-2xl shadow-xl border border-light flex flex-col items-center text-center transition hover:shadow-2xl hover:-translate-y-1">
                         <div className="w-16 h-16 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-4">
