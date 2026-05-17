@@ -41,11 +41,13 @@ function Landing() {
                 <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
-                            <img
-                                src="/logo-transparent.png"
-                                alt="Accescube Logo"
-                                className="h-8 w-auto object-contain"
-                            />
+                            <div className="bg-white rounded-xl px-2 py-1 shadow-md">
+                                <img
+                                    src="/logo-transparent.png"
+                                    alt="Accescube Logo"
+                                    className="h-7 w-auto object-contain"
+                                />
+                            </div>
                         </Link>
                     </div>
 
