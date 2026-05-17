@@ -3,7 +3,6 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../../contexts/DataContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { CubeCard } from '../../components/ui/Card';
-import { Tabs } from '../../components/ui/Modal';
 import { BottomNav } from '../../components/layout/Navigation';
 import {
     Search,
@@ -86,77 +85,75 @@ function Discover() {
 
     return (
         <div className="min-h-screen bg-primary pb-20 md:pb-0">
-            {/* Header */}
-            <header className="sticky top-0 glass z-40">
-                <div className="container py-4">
+            {/* WhatsApp Style Top Header */}
+            <header className="sticky top-0 z-40 bg-elevated border-b border-light shadow-sm">
+                <div className="container pt-3 pb-0">
                     <div className="flex items-center justify-between mb-4">
                         <Link to="/" className="flex items-center gap-2">
-                            <img src="/cube.svg" alt="Accescube" style={{ width: 32, height: 32 }} />
-                            <span className="text-lg font-bold gradient-text">Accescube</span>
+                            <div className="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold text-sm">
+                                A
+                            </div>
+                            <span className="text-lg font-bold tracking-tight text-primary">Accescube</span>
                         </Link>
                         <div className="flex items-center gap-2">
                             <button
-                                className="btn btn-ghost btn-icon"
+                                className="p-2 rounded-full text-secondary hover:text-primary hover:bg-secondary transition"
                                 onClick={toggleTheme}
                             >
-                                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                             </button>
-                            <Link to="/login" className="btn btn-primary btn-sm">
+                            <Link to="/login" className="btn btn-primary !py-1.5 !px-4 !text-xs !rounded-full shadow-sm">
                                 Login
                             </Link>
                         </div>
                     </div>
 
                     {/* Search */}
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 mb-4">
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-tertiary" size={20} />
+                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-tertiary" size={16} />
                             <input
                                 type="text"
-                                className="input w-full pl-10"
+                                className="w-full pl-9 pr-4 py-2.5 bg-secondary text-sm rounded-full text-primary placeholder-tertiary border border-transparent focus:border-primary-500 focus:outline-none transition"
                                 placeholder={`Search ${activeTab}...`}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                         <button
-                            className={`btn ${showFilters ? 'btn-primary' : 'btn-secondary'} btn-icon`}
+                            className={`p-2.5 rounded-full flex items-center justify-center transition border ${showFilters ? 'bg-primary-500 text-white border-primary-500 shadow-md' : 'bg-secondary text-secondary hover:text-primary border-transparent hover:border-medium'}`}
                             onClick={() => setShowFilters(!showFilters)}
                         >
-                            <SlidersHorizontal size={20} />
+                            <SlidersHorizontal size={18} />
                         </button>
                     </div>
 
                     {/* Filters Panel */}
                     {showFilters && (
-                        <div className="mt-4 p-4 rounded-xl bg-elevated border border-light animate-fade-in">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-semibold">Filters</h3>
+                        <div className="mb-4 p-4 rounded-xl bg-secondary border border-light animate-fade-in text-sm">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="font-semibold text-primary">Quick Filters</h3>
                                 <button
-                                    className="text-sm text-primary-500"
+                                    className="text-xs text-primary-500 font-medium"
                                     onClick={() => setFilters({ location: '', category: '', priceRange: '' })}
                                 >
                                     Clear all
                                 </button>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div className="input-group">
-                                    <label className="input-label">Location</label>
-                                    <div className="input-icon">
-                                        <MapPin className="icon" size={18} />
-                                        <input
-                                            type="text"
-                                            className="input"
-                                            placeholder="Any location"
-                                            value={filters.location}
-                                            onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                                        />
-                                    </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div className="relative">
+                                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-tertiary" size={14} />
+                                    <input
+                                        type="text"
+                                        className="w-full pl-8 pr-3 py-2 bg-elevated border border-light rounded-lg text-xs focus:border-primary-500 outline-none"
+                                        placeholder="Any location"
+                                        value={filters.location}
+                                        onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+                                    />
                                 </div>
-                                <div className="input-group">
-                                    <label className="input-label">Category</label>
+                                <div>
                                     <select
-                                        className="input"
+                                        className="w-full px-3 py-2 bg-elevated border border-light rounded-lg text-xs focus:border-primary-500 outline-none"
                                         value={filters.category}
                                         onChange={(e) => setFilters({ ...filters, category: e.target.value })}
                                     >
@@ -167,10 +164,9 @@ function Discover() {
                                         <option value="accountant">Accountants</option>
                                     </select>
                                 </div>
-                                <div className="input-group">
-                                    <label className="input-label">Price Range</label>
+                                <div>
                                     <select
-                                        className="input"
+                                        className="w-full px-3 py-2 bg-elevated border border-light rounded-lg text-xs focus:border-primary-500 outline-none"
                                         value={filters.priceRange}
                                         onChange={(e) => setFilters({ ...filters, priceRange: e.target.value })}
                                     >
@@ -184,9 +180,23 @@ function Discover() {
                         </div>
                     )}
 
-                    {/* Tabs */}
-                    <div className="mt-4">
-                        <Tabs tabs={tabs} activeTab={activeTab} onChange={handleTabChange} />
+                    {/* WhatsApp style Tabs */}
+                    <div className="flex w-full mt-2">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => handleTabChange(tab.id)}
+                                className={`flex-1 py-3 text-center text-xs md:text-sm font-semibold border-b-2 transition flex items-center justify-center gap-1.5 ${
+                                    activeTab === tab.id
+                                        ? 'border-primary-500 text-primary-500'
+                                        : 'border-transparent text-secondary hover:text-primary hover:border-light'
+                                }`}
+                            >
+                                <tab.icon size={16} />
+                                <span className="hidden sm:inline">{tab.label}</span>
+                                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+                            </button>
+                        ))}
                     </div>
                 </div>
             </header>
