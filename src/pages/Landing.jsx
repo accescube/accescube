@@ -56,23 +56,23 @@ function Landing() {
                         </Link>
                     </div>
 
-                    <div className="flex items-center gap-3 md:gap-5">
+                    <div className="flex items-center gap-4 md:gap-6">
                         <button
                             onClick={toggleTheme}
                             aria-label="Toggle theme"
-                            className="p-2.5 text-white/90 hover:text-white hover:bg-white/20 rounded-full transition backdrop-blur-sm"
+                            className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all duration-200"
                         >
-                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                            {theme === 'dark' ? <Sun size={22} className="drop-shadow-md" /> : <Moon size={22} className="drop-shadow-md" />}
                         </button>
                         <Link
                             to="/login"
-                            className="text-sm font-semibold text-white px-4 py-2 hover:bg-white/20 rounded-full transition backdrop-blur-sm hidden sm:block"
+                            className="text-sm font-semibold text-white px-3 py-2 hover:text-primary-300 transition-colors hidden sm:block drop-shadow-md"
                         >
                             Sign in
                         </Link>
                         <Link
                             to="/register"
-                            className="bg-white text-primary-600 font-bold text-sm px-6 py-2.5 rounded-full shadow-lg hover:bg-primary-50 transition hover:scale-105 transform duration-200"
+                            className="bg-primary-500 hover:bg-primary-400 text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-primary-400"
                         >
                             Get Started
                         </Link>
