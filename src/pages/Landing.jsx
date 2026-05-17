@@ -40,14 +40,12 @@ function Landing() {
             <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-black/30 border-b border-white/10 shadow-lg">
                 <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center">
-                        <Link to="/" className="flex items-center">
-                            <div style={{ background: 'white', borderRadius: '8px', padding: '4px 8px', display: 'inline-flex', alignItems: 'center' }}>
-                                <img
-                                    src="/logo-transparent.png"
-                                    alt="Accescube Logo"
-                                    style={{ height: '28px', width: 'auto', maxWidth: '100px', objectFit: 'contain', display: 'block' }}
-                                />
-                            </div>
+                        <Link to="/">
+                            <img
+                                src="/logo.png"
+                                alt="Accescube Logo"
+                                style={{ height: '36px', width: 'auto', maxWidth: '120px', objectFit: 'contain', filter: 'invert(1) brightness(10)', display: 'block' }}
+                            />
                         </Link>
                     </div>
 
