@@ -42,9 +42,16 @@ function Landing() {
                     <div className="flex items-center">
                         <Link to="/">
                             <img
-                                src="/logo-white.png"
+                                src="/logo-src.png"
                                 alt="Accescube Logo"
-                                style={{ height: '48px', width: 'auto', maxWidth: '150px', objectFit: 'contain', display: 'block' }}
+                                style={{
+                                    height: '50px',
+                                    width: 'auto',
+                                    maxWidth: '160px',
+                                    objectFit: 'contain',
+                                    display: 'block',
+                                    filter: 'brightness(0) invert(1)'
+                                }}
                             />
                         </Link>
                     </div>
