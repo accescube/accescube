@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useData } from '../contexts/DataContext';
 import { CubeCard } from '../components/ui/Card';
@@ -11,366 +11,294 @@ import {
     Building2,
     Briefcase,
     Search,
-    MapPin,
     ArrowRight,
     Star,
-    CheckCircle,
-    Sparkles,
+    ShieldCheck,
+    MessageSquare,
     Zap,
-    Shield,
-    Globe
+    Check,
+    Lock
 } from 'lucide-react';
 
 function Landing() {
     const { theme, toggleTheme } = useTheme();
     const { agents, spaces } = useData();
     const [searchQuery, setSearchQuery] = useState('');
+    const [activeTab, setActiveTab] = useState('agents');
+    const navigate = useNavigate();
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/discover?tab=${activeTab}&q=${encodeURIComponent(searchQuery)}`);
+        }
+    };
 
     return (
-        <div className="min-h-screen">
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 glass z-50">
-                <div className="container flex items-center justify-between py-3 md:py-4 gap-2">
-                    <Link to="/" className="flex items-center shrink-0">
-                        <span className="text-xl md:text-2xl font-black tracking-tighter" style={{ textTransform: 'uppercase', color: 'var(--primary-500)' }}>ACCESCUBE</span>
-                    </Link>
+        <div className="min-h-screen bg-secondary text-primary font-ui">
+            {/* WhatsApp Inspired Top Header */}
+            <header className="sticky top-0 z-50 bg-primary-500 text-white shadow-md">
+                <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-white text-primary-500 flex items-center justify-center font-bold text-xl shadow-sm">
+                            A
+                        </div>
+                        <Link to="/" className="font-bold text-lg tracking-tight">
+                            Accescube
+                        </Link>
+                    </div>
 
-                    <div className="flex items-center gap-2 md:gap-6">
+                    <div className="flex items-center gap-2 md:gap-4">
                         <button
-                            className="p-2 text-secondary hover:text-white transition-colors"
                             onClick={toggleTheme}
                             aria-label="Toggle theme"
+                            className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition"
                         >
                             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                         </button>
-                        <Link to="/login" className="font-semibold text-xs md:text-sm hover:text-primary transition-colors hidden sm:block">
-                            Login
+                        <Link
+                            to="/login"
+                            className="text-sm font-medium px-3 py-1.5 hover:bg-white/10 rounded-full transition hidden sm:block"
+                        >
+                            Sign in
                         </Link>
-                        <Link to="/register" className="btn btn-primary !text-[10px] md:!text-sm !py-2 md:!py-3 !px-4 md:!px-8 shadow-glow whitespace-nowrap">
+                        <Link
+                            to="/register"
+                            className="bg-white text-primary-600 font-semibold text-xs md:text-sm px-5 py-2 rounded-full shadow-sm hover:bg-primary-100 transition"
+                        >
                             Get Started
                         </Link>
                     </div>
                 </div>
-            </nav>
+            </header>
 
-            {/* Hero Section */}
-            <section className="hero">
-                <div className="hero-content">
-                    <div className="hero-badge">
-                        <Sparkles size={16} />
-                        <span>Next-Gen Business Platform</span>
+            {/* Simple Mobile-Friendly Hero Section */}
+            <section className="bg-primary-500 text-white pt-8 pb-16 px-4 text-center relative overflow-hidden shadow-lg">
+                <div className="max-w-3xl mx-auto relative z-10">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-6 text-white border border-white/20">
+                        <ShieldCheck size={14} /> Professional Business Platform
                     </div>
-
-                    <h1 className="hero-title">
-                        Building the Future of
-                        <br />
-                        <span className="text-primary-500">Business Collaboration.</span>
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 leading-tight">
+                        Connect & Collaborate <br />
+                        <span className="text-primary-100 font-bold">Instantly.</span>
                     </h1>
-
-                    <p className="hero-description text-xl opacity-70">
-                        Join the elite ecosystem connecting top agencies, innovative employers, and premium workspaces.
+                    <p className="text-base md:text-lg text-primary-100 max-w-xl mx-auto mb-8 font-normal leading-relaxed">
+                        A seamless, fast, and secure network connecting skilled agents, premium workspaces, and growing companies.
                     </p>
 
-                    {/* Search Bar */}
-                    <div className="search-wrapper mb-8 animate-fade-in-up stagger-4">
-                        <Search className="search-icon" size={20} />
-                        <input
-                            type="text"
-                            className="search-input"
-                            placeholder="Search agents, spaces, or companies..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
+                    {/* WhatsApp style search & quick navigation tab */}
+                    <div className="max-w-xl mx-auto bg-elevated text-primary rounded-2xl p-3 shadow-xl mb-6 text-left border border-light">
+                        <div className="flex border-b border-light mb-3">
+                            <button
+                                type="button"
+                                onClick={() => setActiveTab('agents')}
+                                className={`flex-1 py-2 text-center text-xs md:text-sm font-semibold border-b-2 transition flex items-center justify-center gap-1.5 ${
+                                    activeTab === 'agents'
+                                        ? 'border-primary-500 text-primary-500'
+                                        : 'border-transparent text-secondary hover:text-primary'
+                                }`}
+                            >
+                                <Users size={16} /> Find Agents
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setActiveTab('spaces')}
+                                className={`flex-1 py-2 text-center text-xs md:text-sm font-semibold border-b-2 transition flex items-center justify-center gap-1.5 ${
+                                    activeTab === 'spaces'
+                                        ? 'border-primary-500 text-primary-500'
+                                        : 'border-transparent text-secondary hover:text-primary'
+                                }`}
+                            >
+                                <Building2 size={16} /> Workspaces
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSearch} className="flex gap-2">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-tertiary" size={18} />
+                                <input
+                                    type="text"
+                                    placeholder={activeTab === 'agents' ? "Search skill, role, or username..." : "Search office, desk, or location..."}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2.5 bg-secondary text-sm rounded-full text-primary placeholder-tertiary border border-transparent focus:border-primary-500 focus:outline-none transition"
+                                />
+                            </div>
+                            <Button type="submit" variant="primary" className="!px-6 !py-2.5 !rounded-full !text-sm shadow-md">
+                                Search
+                            </Button>
+                        </form>
                     </div>
 
-                    <div className="hero-cta mb-16">
-                        <Link to="/register?role=agent" className="btn btn-primary btn-lg">
-                            <Users size={20} />
-                            I'm an Agent
-                        </Link>
-                        <Link to="/register?role=space" className="btn btn-secondary btn-lg">
-                            <Building2 size={20} />
-                            List My Space
-                        </Link>
-                        <Link to="/register?role=employer" className="btn btn-primary btn-lg">
-                            <Briefcase size={20} />
-                            Hire Talent
-                        </Link>
+                    <div className="flex flex-wrap justify-center gap-3 text-xs text-primary-100">
+                        <span className="flex items-center gap-1"><Check size={14} /> No hidden fees</span>
+                        <span className="flex items-center gap-1 ml-3"><Check size={14} /> Instant connect</span>
+                        <span className="flex items-center gap-1 ml-3"><Check size={14} /> Verified profiles</span>
+                    </div>
+                </div>
+            </section>
+
+            {/* Quick Action Cards (WhatsApp Style Panel) */}
+            <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="bg-elevated p-6 rounded-2xl shadow-card border border-light flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0 font-bold">
+                            <Users size={24} />
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-base mb-1">Skilled Agents</h3>
+                            <p className="text-secondary text-xs mb-3 leading-relaxed">List your expertise or hire elite verified professionals on demand.</p>
+                            <Link to="/register?role=agent" className="text-xs font-bold text-primary-500 inline-flex items-center gap-1 hover:underline">
+                                Join as Agent <ArrowRight size={14} />
+                            </Link>
+                        </div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="flex flex-wrap justify-center gap-8 md:gap-16 mt-16 md:mt-24 border-t border-light pt-12 md:pt-16">
-                        <div className="text-center group flex-1 min-w-[120px]">
-                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-cyan transition-colors">10K+</div>
-                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Elite Agents</div>
+                    <div className="bg-elevated p-6 rounded-2xl shadow-card border border-light flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0 font-bold">
+                            <Building2 size={24} />
                         </div>
-                        <div className="text-center group flex-1 min-w-[120px]">
-                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-violet transition-colors">500+</div>
-                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Workspaces</div>
+                        <div>
+                            <h3 className="font-bold text-base mb-1">Space Cubes</h3>
+                            <p className="text-secondary text-xs mb-3 leading-relaxed">Monetize extra office desks or find premium workspaces instantly.</p>
+                            <Link to="/register?role=space" className="text-xs font-bold text-primary-500 inline-flex items-center gap-1 hover:underline">
+                                List Workspace <ArrowRight size={14} />
+                            </Link>
                         </div>
-                        <div className="text-center group flex-1 min-w-[120px]">
-                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-pink transition-colors">2K+</div>
-                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Companies</div>
+                    </div>
+
+                    <div className="bg-elevated p-6 rounded-2xl shadow-card border border-light flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0 font-bold">
+                            <Briefcase size={24} />
                         </div>
-                        <div className="text-center group flex-1 min-w-[120px]">
-                            <div className="text-3xl md:text-5xl font-black text-white group-hover:text-neon-cyan transition-colors">$5M+</div>
-                            <div className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-secondary mt-2">Volume</div>
+                        <div>
+                            <h3 className="font-bold text-base mb-1">Company Cubes</h3>
+                            <p className="text-secondary text-xs mb-3 leading-relaxed">Build your virtual team, manage projects, and scale your business.</p>
+                            <Link to="/register?role=employer" className="text-xs font-bold text-primary-500 inline-flex items-center gap-1 hover:underline">
+                                Register Company <ArrowRight size={14} />
+                            </Link>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Features Section */}
-            <section className="py-32 bg-secondary border-y border-light">
-                <div className="container">
-                    <div className="text-center mb-24">
-                        <h2 className="text-5xl md:text-6xl font-black mb-8 leading-tight">
-                            Elevate Your <span className="text-gradient">Business Game.</span>
-                        </h2>
-                        <p className="text-secondary text-xl max-w-3xl mx-auto">
-                            Stop settling. Start scaling with the world's most advanced professional ecosystem.
-                        </p>
-                    </div>
-
-                    <div className="feature-grid">
-                        <div className="feature-card group">
-                            <div className="feature-icon bg-zinc-900 group-hover:bg-primary-500 text-white transition-colors">
-                                <Users size={28} />
-                            </div>
-                            <h3 className="feature-title text-2xl">Elite Agents</h3>
-                            <p className="feature-description text-base">
-                                Access a curated network of top-tier professional agents ready to scale your business.
-                            </p>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <Building2 size={28} />
-                            </div>
-                            <h3 className="feature-title">Space Cubes</h3>
-                            <p className="feature-description">
-                                List desks, cabins, or offices. Manage bookings, set dynamic pricing,
-                                and reach professionals looking for workspaces.
-                            </p>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <Briefcase size={28} />
-                            </div>
-                            <h3 className="feature-title">Employer Cubes</h3>
-                            <p className="feature-description">
-                                Build virtual companies. Hire agents, rent spaces, manage teams,
-                                and track projects all in one place.
-                            </p>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <Zap size={28} />
-                            </div>
-                            <h3 className="feature-title">Smart Matching</h3>
-                            <p className="feature-description">
-                                AI-powered recommendations connect you with the right agents,
-                                spaces, or opportunities based on your needs.
-                            </p>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <Shield size={28} />
-                            </div>
-                            <h3 className="feature-title">Verified Trust</h3>
-                            <p className="feature-description">
-                                Verified badges, reviews, and credibility scores build trust
-                                and help you make confident decisions.
-                            </p>
-                        </div>
-
-                        <div className="feature-card">
-                            <div className="feature-icon">
-                                <Globe size={28} />
-                            </div>
-                            <h3 className="feature-title">Local Community</h3>
-                            <p className="feature-description">
-                                Area-based discovery, local events, workshops, and networking
-                                opportunities grow your local presence.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Featured Agents */}
-            <section className="py-16 container">
-                <div className="flex items-center justify-between mb-8">
+            {/* Featured Agents Section */}
+            <section className="max-w-6xl mx-auto px-4 py-8">
+                <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h2 className="text-2xl md:text-3xl font-bold">Top Agents</h2>
-                        <p className="text-secondary">Browse verified professionals</p>
+                        <h2 className="text-xl md:text-2xl font-bold tracking-tight">Verified Professionals</h2>
+                        <p className="text-xs md:text-sm text-secondary">Discover skilled agents ready for new projects</p>
                     </div>
-                    <Link to="/discover?tab=agents" className="btn btn-ghost">
-                        View All <ArrowRight size={18} />
+                    <Link to="/discover?tab=agents" className="text-xs md:text-sm font-semibold text-primary-500 flex items-center gap-1 hover:underline">
+                        View All <ArrowRight size={16} />
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {agents.slice(0, 4).map((agent) => (
-                        <CubeCard
-                            key={agent.id}
-                            type="agent"
-                            data={agent}
-                        />
+                        <CubeCard key={agent.id} type="agent" data={agent} />
                     ))}
                 </div>
             </section>
 
-            {/* Featured Spaces */}
-            <section className="py-24 border-t border-medium">
-                <div className="container">
-                    <div className="flex items-center justify-between mb-12">
-                        <div>
-                            <h2 className="text-4xl font-black">Premium Spaces</h2>
-                            <p className="text-secondary mt-2">Elite workspaces for elite professionals.</p>
-                        </div>
-                        <Link to="/discover?tab=spaces" className="btn btn-outline">
-                            Browse All <ArrowRight size={18} />
-                        </Link>
+            {/* Featured Workspaces Section */}
+            <section className="max-w-6xl mx-auto px-4 py-12 border-t border-light mt-6">
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 className="text-xl md:text-2xl font-bold tracking-tight">Top Workspaces</h2>
+                        <p className="text-xs md:text-sm text-secondary">Book desks, meeting rooms, or private cabins</p>
                     </div>
+                    <Link to="/discover?tab=spaces" className="text-xs md:text-sm font-semibold text-primary-500 flex items-center gap-1 hover:underline">
+                        Explore Spaces <ArrowRight size={16} />
+                    </Link>
+                </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {spaces.filter(s => s.featured).slice(0, 4).map((space) => (
-                            <CubeCard
-                                key={space.id}
-                                type="space"
-                                data={space}
-                            />
-                        ))}
-                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {spaces.filter(s => s.featured).slice(0, 4).map((space) => (
+                        <CubeCard key={space.id} type="space" data={space} />
+                    ))}
                 </div>
             </section>
 
-            {/* Testimonials */}
-            <section className="py-16 container">
-                <div className="text-center mb-12">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-4">Loved by Professionals</h2>
-                    <p className="text-secondary">Join thousands of satisfied users</p>
-                </div>
+            {/* Why Accescube - Simple 3 Column List */}
+            <section className="bg-primary-500/5 py-16 border-y border-light mt-8">
+                <div className="max-w-6xl mx-auto px-4 text-center">
+                    <h2 className="text-2xl md:text-3xl font-extrabold mb-3">Designed for Simplicity & Speed</h2>
+                    <p className="text-sm md:text-base text-secondary max-w-xl mx-auto mb-12">
+                        Get straight to business without complex onboarding or unnecessary roadblocks.
+                    </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="testimonial-card">
-                        <div className="flex items-center gap-1 mb-3">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} fill="var(--warning-400)" color="var(--warning-400)" />)}
-                        </div>
-                        <p className="testimonial-quote">
-                            "Accescube transformed my freelance career. I've tripled my client base
-                            and the verification badge really builds trust."
-                        </p>
-                        <div className="testimonial-author">
-                            <div className="avatar avatar-md">AJ</div>
-                            <div>
-                                <div className="testimonial-name">Alex Johnson</div>
-                                <div className="testimonial-role">Full Stack Developer</div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                        <div className="bg-elevated p-6 rounded-2xl shadow-sm border border-light">
+                            <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-4">
+                                <MessageSquare size={20} />
                             </div>
+                            <h3 className="font-bold text-base mb-2">Instant Messaging</h3>
+                            <p className="text-secondary text-xs leading-relaxed">
+                                Connect directly with professionals or space hosts through our clean, real-time chat interface.
+                            </p>
                         </div>
-                    </div>
 
-                    <div className="testimonial-card">
-                        <div className="flex items-center gap-1 mb-3">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} fill="var(--warning-400)" color="var(--warning-400)" />)}
-                        </div>
-                        <p className="testimonial-quote">
-                            "Managing our co-working space is so much easier now. The booking system
-                            and analytics help us maximize revenue."
-                        </p>
-                        <div className="testimonial-author">
-                            <div className="avatar avatar-md">UH</div>
-                            <div>
-                                <div className="testimonial-name">Urban Work Hub</div>
-                                <div className="testimonial-role">Space Provider</div>
+                        <div className="bg-elevated p-6 rounded-2xl shadow-sm border border-light">
+                            <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-4">
+                                <ShieldCheck size={20} />
                             </div>
+                            <h3 className="font-bold text-base mb-2">Verified Trust</h3>
+                            <p className="text-secondary text-xs leading-relaxed">
+                                Every professional and workspace goes through thorough verification to ensure quality and reliability.
+                            </p>
                         </div>
-                    </div>
 
-                    <div className="testimonial-card">
-                        <div className="flex items-center gap-1 mb-3">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} fill="var(--warning-400)" color="var(--warning-400)" />)}
-                        </div>
-                        <p className="testimonial-quote">
-                            "Finding qualified freelancers was always a challenge. Accescube's
-                            verification system ensures we hire the best talent."
-                        </p>
-                        <div className="testimonial-author">
-                            <div className="avatar avatar-md">TS</div>
-                            <div>
-                                <div className="testimonial-name">TechStart Inc</div>
-                                <div className="testimonial-role">Employer</div>
+                        <div className="bg-elevated p-6 rounded-2xl shadow-sm border border-light">
+                            <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-4">
+                                <Zap size={20} />
                             </div>
+                            <h3 className="font-bold text-base mb-2">Zero Hassle Booking</h3>
+                            <p className="text-secondary text-xs leading-relaxed">
+                                Secure workspaces or hire talent in just three clicks with streamlined, straightforward agreements.
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="cta-section">
-                <h2 className="cta-title">Ready to Build Your Cube?</h2>
-                <p className="cta-description">
-                    Join thousands of professionals growing their business on Accescube
-                </p>
-                <Link to="/register" className="cta-button">
-                    Get Started Free
-                </Link>
+            {/* Bottom Call to Action */}
+            <section className="max-w-4xl mx-auto px-4 py-16 text-center">
+                <div className="bg-gradient-primary text-white rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden">
+                    <h2 className="text-2xl md:text-4xl font-extrabold mb-4 tracking-tight">Ready to Get Started?</h2>
+                    <p className="text-primary-100 text-sm md:text-base max-w-md mx-auto mb-8 leading-relaxed font-normal">
+                        Join our fast-growing network of top talent and premium workspaces today.
+                    </p>
+                    <Link
+                        to="/register"
+                        className="inline-flex items-center gap-2 bg-white text-primary-600 font-bold px-8 py-3.5 rounded-full text-sm shadow-lg hover:bg-primary-100 transition duration-200"
+                    >
+                        Create Your Free Account <ArrowRight size={16} />
+                    </Link>
+                </div>
             </section>
 
-            {/* Footer */}
-            <footer className="footer">
-                <div className="footer-grid">
-                    <div className="footer-brand">
-                        <div className="flex items-center gap-3 mb-4">
-                            <img src="/cube.svg" alt="ACCESCUBE" style={{ width: 32, height: 32 }} />
-                            <span className="text-lg font-extrabold tracking-wider" style={{ textTransform: 'uppercase' }}>ACCESCUBE</span>
+            {/* Clean Footer */}
+            <footer className="bg-elevated border-t border-light py-10 px-4 text-xs text-secondary font-medium">
+                <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold text-xs">
+                            A
                         </div>
-                        <p className="text-sm text-secondary mb-4">
-                            The next-generation platform connecting agents, employers, and workspaces.
-                        </p>
-                        <div className="flex gap-4">
-                            <a href="#" className="text-secondary hover:text-primary">Twitter</a>
-                            <a href="#" className="text-secondary hover:text-primary">LinkedIn</a>
-                            <a href="#" className="text-secondary hover:text-primary">Instagram</a>
-                        </div>
+                        <span className="font-bold text-primary text-sm">Accescube</span>
+                        <span className="text-tertiary">| Fast Business Network</span>
                     </div>
 
-                    <div>
-                        <h4 className="footer-title">Platform</h4>
-                        <div className="footer-links">
-                            <Link to="/discover" className="footer-link">Find Agents</Link>
-                            <Link to="/discover?tab=spaces" className="footer-link">Find Spaces</Link>
-                            <Link to="/community" className="footer-link">Community</Link>
-                            <Link to="/pricing" className="footer-link">Pricing</Link>
-                        </div>
+                    <div className="flex flex-wrap justify-center gap-6 text-secondary">
+                        <Link to="/discover" className="hover:text-primary-500 transition">Find Agents</Link>
+                        <Link to="/discover?tab=spaces" className="hover:text-primary-500 transition">Workspaces</Link>
+                        <Link to="/community" className="hover:text-primary-500 transition">Events</Link>
+                        <Link to="/login" className="hover:text-primary-500 transition font-semibold text-primary">Sign in</Link>
                     </div>
 
-                    <div>
-                        <h4 className="footer-title">Company</h4>
-                        <div className="footer-links">
-                            <a href="#" className="footer-link">About Us</a>
-                            <a href="#" className="footer-link">Careers</a>
-                            <a href="#" className="footer-link">Blog</a>
-                            <a href="#" className="footer-link">Contact</a>
-                        </div>
+                    <div className="text-tertiary">
+                        &copy; {new Date().getFullYear()} Accescube. All rights reserved.
                     </div>
-
-                    <div>
-                        <h4 className="footer-title">Legal</h4>
-                        <div className="footer-links">
-                            <a href="#" className="footer-link">Privacy Policy</a>
-                            <a href="#" className="footer-link">Terms of Service</a>
-                            <a href="#" className="footer-link">Cookie Policy</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="footer-bottom">
-                    © 2024 Accescube. All rights reserved.
                 </div>
             </footer>
         </div>
