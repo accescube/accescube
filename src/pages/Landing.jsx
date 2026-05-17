@@ -39,15 +39,16 @@ function Landing() {
             {/* Transparent Floating Header */}
             <header className="absolute top-0 w-full z-50 bg-transparent border-b border-white/10">
                 <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center">
                         <Link to="/" className="flex items-center">
                             <img
                                 src="/logo.png"
                                 alt="Accescube Logo"
-                                className="h-12 w-auto"
+                                className="h-8 w-auto object-contain"
                                 style={{ 
                                     filter: 'invert(1)',
-                                    mixBlendMode: 'screen'
+                                    mixBlendMode: 'screen',
+                                    maxWidth: '120px'
                                 }}
                             />
                         </Link>
