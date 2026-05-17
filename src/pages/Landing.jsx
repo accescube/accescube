@@ -40,12 +40,15 @@ function Landing() {
             <header className="absolute top-0 w-full z-50 bg-transparent border-b border-white/10">
                 <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Link to="/" className="flex items-center gap-2">
+                        <Link to="/" className="flex items-center">
                             <img
                                 src="/logo.png"
                                 alt="Accescube Logo"
-                                className="h-10 w-auto"
-                                style={{ filter: 'invert(1) brightness(2)' }}
+                                className="h-12 w-auto"
+                                style={{ 
+                                    filter: 'invert(1)',
+                                    mixBlendMode: 'screen'
+                                }}
                             />
                         </Link>
                     </div>
