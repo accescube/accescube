@@ -41,11 +41,11 @@ function Landing() {
                 <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
-                            <div className="bg-white rounded-xl px-2 py-1 shadow-md">
+                            <div style={{ background: 'white', borderRadius: '8px', padding: '4px 8px', display: 'inline-flex', alignItems: 'center' }}>
                                 <img
                                     src="/logo-transparent.png"
                                     alt="Accescube Logo"
-                                    className="h-7 w-auto object-contain"
+                                    style={{ height: '28px', width: 'auto', maxWidth: '100px', objectFit: 'contain', display: 'block' }}
                                 />
                             </div>
                         </Link>
