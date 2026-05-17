@@ -152,45 +152,39 @@ function Landing() {
             </section>
 
             {/* Quick Action Cards (WhatsApp Style Panel) */}
-            <section className="max-w-6xl mx-auto px-4 -mt-8 relative z-20 mb-12">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-elevated p-6 rounded-2xl shadow-card border border-light flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0 font-bold">
-                            <Users size={24} />
+            <section className="max-w-6xl mx-auto px-4 -mt-12 relative z-20 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-elevated p-8 rounded-2xl shadow-xl border border-light flex flex-col items-center text-center transition hover:shadow-2xl hover:-translate-y-1">
+                        <div className="w-16 h-16 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-4">
+                            <Users size={32} />
                         </div>
-                        <div>
-                            <h3 className="font-bold text-base mb-1">Skilled Agents</h3>
-                            <p className="text-secondary text-xs mb-3 leading-relaxed">List your expertise or hire elite verified professionals on demand.</p>
-                            <Link to="/register?role=agent" className="text-xs font-bold text-primary-500 inline-flex items-center gap-1 hover:underline">
-                                Join as Agent <ArrowRight size={14} />
-                            </Link>
-                        </div>
+                        <h3 className="font-bold text-lg mb-2">Skilled Agents</h3>
+                        <p className="text-secondary text-sm mb-4 leading-relaxed flex-grow">List your expertise or hire elite verified professionals on demand.</p>
+                        <Link to="/register?role=agent" className="text-sm font-bold text-primary-500 inline-flex items-center gap-1.5 hover:underline">
+                            Join as Agent <ArrowRight size={16} />
+                        </Link>
                     </div>
 
-                    <div className="bg-elevated p-6 rounded-2xl shadow-card border border-light flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0 font-bold">
-                            <Building2 size={24} />
+                    <div className="bg-elevated p-8 rounded-2xl shadow-xl border border-light flex flex-col items-center text-center transition hover:shadow-2xl hover:-translate-y-1">
+                        <div className="w-16 h-16 rounded-2xl bg-success-500/10 text-success-500 flex items-center justify-center font-bold mb-4">
+                            <Building2 size={32} />
                         </div>
-                        <div>
-                            <h3 className="font-bold text-base mb-1">Space Cubes</h3>
-                            <p className="text-secondary text-xs mb-3 leading-relaxed">Monetize extra office desks or find premium workspaces instantly.</p>
-                            <Link to="/register?role=space" className="text-xs font-bold text-primary-500 inline-flex items-center gap-1 hover:underline">
-                                List Workspace <ArrowRight size={14} />
-                            </Link>
-                        </div>
+                        <h3 className="font-bold text-lg mb-2">Space Cubes</h3>
+                        <p className="text-secondary text-sm mb-4 leading-relaxed flex-grow">Monetize extra office desks or find premium workspaces instantly.</p>
+                        <Link to="/register?role=space" className="text-sm font-bold text-success-500 inline-flex items-center gap-1.5 hover:underline">
+                            List Workspace <ArrowRight size={16} />
+                        </Link>
                     </div>
 
-                    <div className="bg-elevated p-6 rounded-2xl shadow-card border border-light flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center shrink-0 font-bold">
-                            <Briefcase size={24} />
+                    <div className="bg-elevated p-8 rounded-2xl shadow-xl border border-light flex flex-col items-center text-center transition hover:shadow-2xl hover:-translate-y-1">
+                        <div className="w-16 h-16 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold mb-4">
+                            <Briefcase size={32} />
                         </div>
-                        <div>
-                            <h3 className="font-bold text-base mb-1">Company Cubes</h3>
-                            <p className="text-secondary text-xs mb-3 leading-relaxed">Build your virtual team, manage projects, and scale your business.</p>
-                            <Link to="/register?role=employer" className="text-xs font-bold text-primary-500 inline-flex items-center gap-1 hover:underline">
-                                Register Company <ArrowRight size={14} />
-                            </Link>
-                        </div>
+                        <h3 className="font-bold text-lg mb-2">Company Cubes</h3>
+                        <p className="text-secondary text-sm mb-4 leading-relaxed flex-grow">Build your virtual team, manage projects, and scale your business.</p>
+                        <Link to="/register?role=employer" className="text-sm font-bold text-primary-500 inline-flex items-center gap-1.5 hover:underline">
+                            Register Company <ArrowRight size={16} />
+                        </Link>
                     </div>
                 </div>
             </section>
