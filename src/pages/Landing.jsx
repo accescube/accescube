@@ -82,7 +82,7 @@ function Landing() {
 
             {/* Full Width Background Hero Section */}
             <section 
-                className="relative pt-36 pb-24 px-4 flex items-center justify-center min-h-screen overflow-hidden"
+                className="relative pt-36 pb-24 px-4 flex items-center min-h-screen overflow-hidden"
                 style={{
                     backgroundImage: 'url(/hero-agent.png)',
                     backgroundSize: 'cover',
@@ -93,7 +93,7 @@ function Landing() {
                 {/* Dark Overlay for Text Legibility */}
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
 
-                <div className="container mx-auto max-w-4xl relative z-10 text-center flex flex-col items-center">
+                <div className="max-w-6xl w-full mx-auto relative z-10 text-left flex flex-col items-start px-4 md:px-8">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-6 text-white border border-white/30 shadow-lg">
                         <ShieldCheck size={14} /> Professional Business Platform
                     </div>
@@ -103,10 +103,10 @@ function Landing() {
                         <span className="text-primary-400 font-bold drop-shadow-md">Instantly.</span>
                     </h1>
                     
-                    <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10 font-normal leading-relaxed drop-shadow-md">
+                    <p className="text-lg md:text-xl text-gray-200 max-w-2xl mb-10 font-normal leading-relaxed drop-shadow-md">
                         A seamless, fast, and secure network connecting skilled agents, premium workspaces, and growing companies in India and beyond.
                     </p>
-                    <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-300 font-medium drop-shadow-md mt-2">
+                    <div className="flex flex-wrap justify-start gap-8 text-sm text-gray-300 font-medium drop-shadow-md mt-2">
                         <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> No hidden fees</span>
                         <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> Instant connect</span>
                         <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> Verified profiles</span>
