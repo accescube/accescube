@@ -154,37 +154,6 @@ function Login() {
                     </div>
                 </form>
 
-                <div className="w-full mt-6 pt-6 border-t border-light text-center">
-                    <span className="block text-[10px] text-tertiary uppercase tracking-widest font-bold mb-3">Quick Demo Login</span>
-                    <div className="flex gap-2 justify-center mb-2">
-                        <button
-                            type="button"
-                            className="btn btn-secondary text-xs py-1.5 px-4 flex-1 rounded-xl font-semibold border border-light"
-                            onClick={() => {
-                                setUsername('agent');
-                                setPassword('password123');
-                                setTimeout(() => document.getElementById('login-form').requestSubmit(), 50);
-                            }}
-                        >
-                            Agent Demo
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-secondary text-xs py-1.5 px-4 flex-1 rounded-xl font-semibold border border-light"
-                            onClick={() => {
-                                setUsername('provider');
-                                setPassword('password123');
-                                setTimeout(() => document.getElementById('login-form').requestSubmit(), 50);
-                            }}
-                        >
-                            Space Demo
-                        </button>
-                    </div>
-                    <p className="text-[10px] text-tertiary leading-tight">
-                        Clicking either button will automatically sign in or initialize the demo account.
-                    </p>
-                </div>
-
                 <div className="mt-6 pt-4 border-t border-light text-center">
                     <p className="text-xs text-secondary">
                         Don't have an account?{' '}
