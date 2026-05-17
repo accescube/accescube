@@ -37,14 +37,14 @@ function Landing() {
     return (
         <div className="min-h-screen bg-secondary text-primary font-ui">
             {/* Fixed Glassmorphism Navbar */}
-            <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-black/30 border-b border-white/10 shadow-lg">
-                <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-black/40 border-b border-white/10 shadow-lg">
+                <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center">
                         <Link to="/">
                             <img
-                                src="/logo.png"
+                                src="/logo-white.png"
                                 alt="Accescube Logo"
-                                style={{ height: '36px', width: 'auto', maxWidth: '120px', objectFit: 'contain', filter: 'invert(1) brightness(10)', display: 'block' }}
+                                style={{ height: '48px', width: 'auto', maxWidth: '150px', objectFit: 'contain', display: 'block' }}
                             />
                         </Link>
                     </div>
