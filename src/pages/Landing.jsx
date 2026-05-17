@@ -41,21 +41,11 @@ function Landing() {
                 <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
-                            {/* Accescube SVG Logo — fully transparent, white */}
-                            <svg height="36" viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                {/* C-bracket mark */}
-                                <path
-                                    d="M60 8 L20 8 Q8 8 8 20 L8 140 Q8 152 20 152 L60 152"
-                                    stroke="white"
-                                    strokeWidth="16"
-                                    strokeLinecap="square"
-                                    fill="none"
-                                />
-                                {/* "acces" text */}
-                                <text x="68" y="80" fontFamily="Inter, sans-serif" fontWeight="800" fontSize="52" fill="white" letterSpacing="-1">acces</text>
-                                {/* "cube" text */}
-                                <text x="68" y="140" fontFamily="Inter, sans-serif" fontWeight="800" fontSize="52" fill="white" letterSpacing="-1">cube</text>
-                            </svg>
+                            <img
+                                src="/logo-transparent.png"
+                                alt="Accescube Logo"
+                                className="h-10 w-auto object-contain"
+                            />
                         </Link>
                     </div>
 
