@@ -36,15 +36,15 @@ function Landing() {
 
     return (
         <div className="min-h-screen bg-secondary text-primary font-ui">
-            {/* Transparent Floating Header */}
-            <header className="absolute top-0 w-full z-50 bg-transparent border-b border-white/10">
-                <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            {/* Fixed Glassmorphism Navbar */}
+            <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-black/30 border-b border-white/10 shadow-lg">
+                <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
                             <img
                                 src="/logo-transparent.png"
                                 alt="Accescube Logo"
-                                className="h-10 w-auto object-contain"
+                                className="h-8 w-auto object-contain"
                             />
                         </Link>
                     </div>
