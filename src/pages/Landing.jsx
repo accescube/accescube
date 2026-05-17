@@ -74,7 +74,7 @@ function Landing() {
 
             {/* Full Width Background Hero Section */}
             <section 
-                className="relative pt-24 pb-32 px-4 flex items-center justify-center min-h-[600px] overflow-hidden"
+                className="relative pt-36 pb-24 px-4 flex items-center justify-center min-h-screen overflow-hidden"
                 style={{
                     backgroundImage: 'url(/hero-agent.png)',
                     backgroundSize: 'cover',
