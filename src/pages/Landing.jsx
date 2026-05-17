@@ -98,60 +98,60 @@ function Landing() {
                     <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-10 font-normal leading-relaxed drop-shadow-md">
                         A seamless, fast, and secure network connecting skilled agents, premium workspaces, and growing companies in India and beyond.
                     </p>
-        
-                    {/* WhatsApp style search & quick navigation tab */}
-                    <div className="w-full max-w-2xl mx-auto bg-elevated/95 backdrop-blur-xl text-primary rounded-2xl p-4 shadow-2xl mb-8 text-left border border-light">
-                        <div className="flex border-b border-light mb-4">
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('agents')}
-                                className={`flex-1 py-3 text-center text-sm md:text-base font-bold border-b-2 transition flex items-center justify-center gap-2 ${
-                                    activeTab === 'agents'
-                                        ? 'border-primary-500 text-primary-500'
-                                        : 'border-transparent text-secondary hover:text-primary'
-                                }`}
-                            >
-                                <Users size={18} /> Find Agents
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('spaces')}
-                                className={`flex-1 py-3 text-center text-sm md:text-base font-bold border-b-2 transition flex items-center justify-center gap-2 ${
-                                    activeTab === 'spaces'
-                                        ? 'border-primary-500 text-primary-500'
-                                        : 'border-transparent text-secondary hover:text-primary'
-                                }`}
-                            >
-                                <Building2 size={18} /> Workspaces
-                            </button>
-                        </div>
-        
-                        <form onSubmit={handleSearch} className="flex gap-3">
-                            <div className="relative flex-1">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-tertiary" size={20} />
-                                <input
-                                    type="text"
-                                    placeholder={activeTab === 'agents' ? "Search skill, role, or username..." : "Search office, desk, or location..."}
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full pl-11 pr-4 py-3 bg-secondary text-base rounded-full text-primary placeholder-tertiary border border-transparent focus:border-primary-500 focus:outline-none transition shadow-inner"
-                                />
-                            </div>
-                            <Button type="submit" variant="primary" className="!px-8 !py-3 !rounded-full !text-base shadow-lg hover:shadow-xl font-bold">
-                                Search
-                            </Button>
-                        </form>
-                    </div>
-        
-                    <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-200 font-medium drop-shadow-md">
-                        <span className="flex items-center gap-1.5"><Check size={16} className="text-success-500" /> No hidden fees</span>
-                        <span className="flex items-center gap-1.5"><Check size={16} className="text-success-500" /> Instant connect</span>
-                        <span className="flex items-center gap-1.5"><Check size={16} className="text-success-500" /> Verified profiles</span>
+                    <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-300 font-medium drop-shadow-md mt-2">
+                        <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> No hidden fees</span>
+                        <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> Instant connect</span>
+                        <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> Verified profiles</span>
                     </div>
                 </div>
             </section>
 
-            {/* Quick Action Cards (WhatsApp Style Panel) */}
+            {/* Search Section — Below Hero */}
+            <section className="bg-elevated border-b border-medium shadow-md py-6 px-4 sticky top-0 z-40">
+                <div className="max-w-4xl mx-auto">
+                    <div className="flex border-b border-light mb-5">
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('agents')}
+                            className={`flex-1 py-3 text-center text-sm md:text-base font-bold border-b-2 transition flex items-center justify-center gap-2 ${
+                                activeTab === 'agents'
+                                    ? 'border-primary-500 text-primary-500'
+                                    : 'border-transparent text-secondary hover:text-primary'
+                            }`}
+                        >
+                            <Users size={18} /> Find Agents
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('spaces')}
+                            className={`flex-1 py-3 text-center text-sm md:text-base font-bold border-b-2 transition flex items-center justify-center gap-2 ${
+                                activeTab === 'spaces'
+                                    ? 'border-primary-500 text-primary-500'
+                                    : 'border-transparent text-secondary hover:text-primary'
+                            }`}
+                        >
+                            <Building2 size={18} /> Workspaces
+                        </button>
+                    </div>
+                    <form onSubmit={handleSearch} className="flex gap-3 flex-col sm:flex-row">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-tertiary" size={20} />
+                            <input
+                                type="text"
+                                placeholder={activeTab === 'agents' ? "Search skill, role, or username..." : "Search office, desk, or location..."}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-12 pr-4 py-3.5 bg-secondary text-base rounded-full text-primary placeholder-tertiary border border-medium focus:border-primary-500 focus:outline-none transition shadow-inner"
+                            />
+                        </div>
+                        <Button type="submit" variant="primary" className="!px-10 !py-3.5 !rounded-full !text-base shadow-md hover:shadow-lg font-bold w-full sm:w-auto">
+                            Search
+                        </Button>
+                    </form>
+                </div>
+            </section>
+
+            {/* Quick Action Cards */}
             <section className="max-w-6xl mx-auto px-4 py-16 relative z-20">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-elevated p-8 rounded-2xl shadow-xl border border-light flex flex-col items-center text-center transition hover:shadow-2xl hover:-translate-y-1">
