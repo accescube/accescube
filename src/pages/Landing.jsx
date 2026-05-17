@@ -39,12 +39,14 @@ function Landing() {
             {/* Transparent Floating Header */}
             <header className="absolute top-0 w-full z-50 bg-transparent border-b border-white/10">
                 <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-white text-primary-600 flex items-center justify-center font-bold text-xl shadow-lg">
-                            A
-                        </div>
-                        <Link to="/" className="font-bold text-xl tracking-tight text-white drop-shadow-md">
-                            Accescube
+                    <div className="flex items-center gap-2">
+                        <Link to="/" className="flex items-center gap-2">
+                            <img
+                                src="/logo.png"
+                                alt="Accescube Logo"
+                                className="h-10 w-auto"
+                                style={{ filter: 'invert(1) brightness(2)' }}
+                            />
                         </Link>
                     </div>
 
