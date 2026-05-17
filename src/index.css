@@ -15,8 +15,8 @@
   --text-tertiary: #8696a0;
   --text-inverse: #ffffff;
 
-  --border-light: rgba(0, 0, 0, 0.08);
-  --border-medium: rgba(0, 0, 0, 0.15);
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
   --border-glow: rgba(0, 122, 255, 0.2);
 
   --success-500: #25d366;
@@ -98,8 +98,8 @@
   --text-tertiary: #667781;
   --text-inverse: #111b21;
 
-  --border-light: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-light: #334155;
+  --border-medium: #475569;
   --border-glow: rgba(51, 160, 255, 0.2);
 
   --gradient-primary: linear-gradient(135deg, #33a0ff 0%, #007aff 100%);
