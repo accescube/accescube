@@ -188,12 +188,12 @@ export function TopHeader({ title }) {
                     >
                         <Menu size={24} />
                     </button>
-                    <Link to="/" className="md:hidden">
+                    <Link to="/" className="flex items-center">
                         <img
                             src="/logo-src.png"
                             alt="Accescube Logo"
                             style={{
-                                height: '32px',
+                                height: '36px',
                                 width: 'auto',
                                 objectFit: 'contain',
                                 display: 'block',
@@ -201,7 +201,6 @@ export function TopHeader({ title }) {
                             }}
                         />
                     </Link>
-                    <h1 className="header-title hidden md:block">{title}</h1>
                 </div>
 
                 <div className="header-actions">
