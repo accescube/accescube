@@ -116,7 +116,20 @@ export function Sidebar() {
     return (
         <aside className="sidebar">
             <div className="sidebar-logo">
-                <span className="sidebar-logo-text" style={{ textTransform: 'uppercase', fontWeight: 900, letterSpacing: '-0.02em', fontSize: '1.5rem', color: 'var(--primary-500)' }}>ACCESCUBE</span>
+                <Link to="/">
+                    <img
+                        src="/logo-src.png"
+                        alt="Accescube Logo"
+                        style={{
+                            height: '40px',
+                            width: 'auto',
+                            maxWidth: '180px',
+                            objectFit: 'contain',
+                            display: 'block',
+                            filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'brightness(0)'
+                        }}
+                    />
+                </Link>
             </div>
 
             <nav className="sidebar-nav">
@@ -168,14 +181,28 @@ export function TopHeader({ title }) {
     return (
         <>
             <header className="top-header">
-                <button
-                    className="btn btn-ghost btn-icon md:hidden"
-                    onClick={() => setShowMobileMenu(true)}
-                >
-                    <Menu size={24} />
-                </button>
-
-                <h1 className="header-title">{title}</h1>
+                <div className="flex items-center gap-4">
+                    <button
+                        className="btn btn-ghost btn-icon md:hidden"
+                        onClick={() => setShowMobileMenu(true)}
+                    >
+                        <Menu size={24} />
+                    </button>
+                    <Link to="/" className="md:hidden">
+                        <img
+                            src="/logo-src.png"
+                            alt="Accescube Logo"
+                            style={{
+                                height: '32px',
+                                width: 'auto',
+                                objectFit: 'contain',
+                                display: 'block',
+                                filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'brightness(0)'
+                            }}
+                        />
+                    </Link>
+                    <h1 className="header-title hidden md:block">{title}</h1>
+                </div>
 
                 <div className="header-actions">
                     <button
