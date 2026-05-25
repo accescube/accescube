@@ -91,25 +91,25 @@ function Landing() {
                 }}
             >
                 {/* Dark Overlay for Text Legibility */}
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+                <div className="absolute inset-0 bg-black/70 backdrop-blur-[3px]"></div>
 
                 <div className="max-w-6xl w-full mx-auto relative z-10 text-left flex flex-col items-start px-4 md:px-8">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider mb-6 text-white border border-white/30 shadow-lg">
-                        <ShieldCheck size={14} /> Professional Business Platform
+                    <div className="w-fit inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md text-xs md:text-sm font-bold uppercase tracking-widest mb-6 text-white border border-white/20 shadow-xl">
+                        <ShieldCheck size={16} className="text-primary-400" /> Professional Business Platform
                     </div>
                     
-                    <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-white drop-shadow-lg">
-                        Connect & Collaborate <br />
-                        <span className="text-primary-400 font-bold drop-shadow-md">Instantly.</span>
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-white" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+                        Connect & Collaborate <br className="hidden md:block" />
+                        <span className="text-primary-400 font-black">Instantly.</span>
                     </h1>
                     
-                    <p className="text-lg md:text-xl text-gray-200 max-w-2xl mb-10 font-normal leading-relaxed drop-shadow-md">
+                    <p className="text-lg md:text-2xl text-gray-100 max-w-2xl mb-10 font-medium leading-relaxed" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
                         A seamless, fast, and secure network connecting skilled agents, premium workspaces, and growing companies in India and beyond.
                     </p>
-                    <div className="flex flex-wrap justify-start gap-8 text-sm text-gray-300 font-medium drop-shadow-md mt-2">
-                        <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> No hidden fees</span>
-                        <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> Instant connect</span>
-                        <span className="flex items-center gap-2"><Check size={18} className="text-success-400" /> Verified profiles</span>
+                    <div className="flex flex-wrap justify-start gap-6 md:gap-8 text-sm md:text-base text-gray-200 font-semibold mt-2">
+                        <span className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full"><Check size={20} className="text-success-400 drop-shadow-md" /> No hidden fees</span>
+                        <span className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full"><Check size={20} className="text-success-400 drop-shadow-md" /> Instant connect</span>
+                        <span className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full"><Check size={20} className="text-success-400 drop-shadow-md" /> Verified profiles</span>
                     </div>
                 </div>
             </section>

@@ -50,11 +50,15 @@ export function CubeCard({
     return (
         <Link to={getLink()} className="cube-card card-interactive">
             <div className="cube-card-image">
-                <div className="flex items-center justify-center h-full text-5xl" style={{ background: 'var(--gradient-card)' }}>
-                    {type === 'agent' && <Users size={48} className="text-primary-500 opacity-80" />}
-                    {type === 'space' && <Building2 size={48} className="text-primary-500 opacity-80" />}
-                    {type === 'employer' && <Briefcase size={48} className="text-primary-500 opacity-80" />}
-                </div>
+                {data.image ? (
+                    <img src={data.image} alt={data.name} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" />
+                ) : (
+                    <div className="flex items-center justify-center h-full text-5xl" style={{ background: 'var(--gradient-card)' }}>
+                        {type === 'agent' && <Users size={48} className="text-primary-500 opacity-80" />}
+                        {type === 'space' && <Building2 size={48} className="text-primary-500 opacity-80" />}
+                        {type === 'employer' && <Briefcase size={48} className="text-primary-500 opacity-80" />}
+                    </div>
+                )}
 
                 {badge && (
                     <div className="cube-card-badge">
