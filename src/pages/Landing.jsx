@@ -82,8 +82,9 @@ function Landing() {
 
             {/* Full Width Background Hero Section */}
             <section 
-                className="relative pt-32 pb-24 px-4 flex items-start min-h-screen overflow-hidden"
+                className="relative pb-24 px-4 flex min-h-screen overflow-hidden"
                 style={{
+                    paddingTop: '80px',
                     backgroundImage: 'url(/hero-agent.png)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -93,7 +94,7 @@ function Landing() {
                 {/* Dark Overlay for Text Legibility */}
                 <div className="absolute inset-0 bg-black/70 backdrop-blur-[3px]"></div>
 
-                <div className="max-w-6xl w-full mx-auto relative z-10 text-left flex flex-col items-start px-4 md:px-8 mt-10">
+                <div className="max-w-6xl w-full mx-auto relative z-10 text-left flex flex-col justify-center items-start px-4 md:px-8 py-16">
                     <div className="w-fit inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md text-xs md:text-sm font-bold uppercase tracking-widest mb-6 text-white border border-white/20 shadow-xl">
                         <ShieldCheck size={16} className="text-primary-400" /> Professional Business Platform
                     </div>
