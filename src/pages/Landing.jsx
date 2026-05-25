@@ -44,8 +44,14 @@ function Landing() {
                             <img
                                 src="/logo-src.png"
                                 alt="Accescube Logo"
-                                className="h-10 w-auto object-contain block"
-                                style={{ filter: 'brightness(0) invert(1)' }}
+                                style={{
+                                    height: '40px',
+                                    width: 'auto',
+                                    maxWidth: '160px',
+                                    objectFit: 'contain',
+                                    display: 'block',
+                                    filter: 'brightness(0) invert(1)'
+                                }}
                             />
                         </Link>
                     </div>
