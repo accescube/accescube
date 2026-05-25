@@ -78,9 +78,13 @@ function AgentDetail() {
             message: hireData.message,
         });
 
-        toast.success('Hire request sent! The agent will review your project.');
+        toast.success('Hire request sent! Redirecting to your dashboard...');
         setShowHireModal(false);
         setHireData({ project: '', budget: '', message: '' });
+        
+        setTimeout(() => {
+            navigate('/employer/agents');
+        }, 1500);
     };
 
     const handleSendMessage = () => {

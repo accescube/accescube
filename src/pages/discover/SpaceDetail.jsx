@@ -109,9 +109,13 @@ function SpaceDetail() {
                 bookingData.type === 'daily' ? space.pricing.daily : space.pricing.monthly,
         });
 
-        toast.success(`Booking confirmed for ${space.name}!`);
+        toast.success(`Booking confirmed for ${space.name}! Redirecting...`);
         setShowBookingModal(false);
         setBookingData({ date: '', startTime: '09:00', endTime: '17:00', type: 'daily' });
+        
+        setTimeout(() => {
+            navigate('/dashboard');
+        }, 1500);
     };
 
     const handleShare = () => {
