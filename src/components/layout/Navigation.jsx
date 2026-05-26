@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import {
@@ -17,7 +17,8 @@ import {
     Moon,
     Menu,
     Bell,
-    X
+    X,
+    ArrowLeft
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -174,66 +175,80 @@ export function Sidebar() {
 }
 
 // Top Header
-export function TopHeader({ title }) {
+export function TopHeader({ title, isDashboard = false, backTo, actions }) {
     const { theme, toggleTheme } = useTheme();
     const [showMobileMenu, setShowMobileMenu] = useState(false);
-
+    const { user } = useAuth();
     return (
         <>
-            <header className="top-header">
-                <div className="flex items-center gap-4">
-                    <button
-                        className="btn btn-ghost btn-icon md:hidden"
-                        onClick={() => setShowMobileMenu(true)}
-                    >
-                        <Menu size={24} />
-                    </button>
-                    <Link to="/" className="md:hidden">
-                        <img
-                            src="/logo-src.png"
-                            alt="Accescube Logo"
-                            style={{
-                                height: '32px',
-                                width: 'auto',
-                                objectFit: 'contain',
-                                display: 'block',
-                                filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'brightness(0)'
-                            }}
-                        />
-                    </Link>
-                    <h1 className="header-title hidden md:block">{title}</h1>
-                </div>
-
-                <div className="header-actions">
-                    <button
-                        className="btn btn-ghost btn-icon"
-                        onClick={toggleTheme}
-                    >
-                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                    </button>
-                    <button className="btn btn-ghost btn-icon">
-                        <Bell size={20} />
-                    </button>
+            <header className={isDashboard ? "top-header" : "public-header"}>
+                <div className={isDashboard ? "w-full flex items-center justify-between" : "w-full max-w-6xl mx-auto px-6 flex items-center justify-between"}>
+                    <div className="flex items-center gap-4">
+                        {backTo && (
+                            <>
+                                <Link to={backTo} className="flex items-center gap-2 text-white/95 hover:text-white transition-colors duration-200">
+                                    <ArrowLeft size={20} />
+                                    <span className="hidden sm:inline font-semibold text-sm">Back</span>
+                                </Link>
+                                <div className="h-6 w-px bg-white/20 hidden sm:block"></div>
+                            </>
+                        )}
+                        <Link to="/" className={isDashboard ? "flex items-center h-full md:hidden" : "flex items-center h-full"}>
+                            <img
+                                src="/logo-src.png"
+                                alt="Accescube Logo"
+                                style={{
+                                    height: '40px',
+                                    width: 'auto',
+                                    maxWidth: '160px',
+                                    objectFit: 'contain',
+                                    display: 'block',
+                                    filter: 'brightness(0) invert(1)'
+                                }}
+                            />
+                        </Link>
+                        {title && <h1 className="header-title text-white text-lg font-semibold ml-4">{title}</h1>}
+                    </div>
+                    <div className="flex items-center gap-4">
+                        {actions}
+                        <button aria-label="Toggle theme" className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all duration-200" onClick={toggleTheme}>
+                            {theme === 'dark' ? <Sun size={22} className="drop-shadow-md" /> : <Moon size={22} className="drop-shadow-md" />}
+                        </button>
+                        {!isDashboard && (
+                            user ? (
+                                <Link
+                                    to="/dashboard"
+                                    className="bg-primary-500 hover:bg-primary-400 text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-primary-400"
+                                >
+                                    Dashboard
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/login"
+                                        className="text-sm font-semibold text-white px-3 py-2 hover:text-primary-300 transition-colors hidden sm:block drop-shadow-md"
+                                    >
+                                        Sign in
+                                    </Link>
+                                    <Link
+                                        to="/register"
+                                        className="bg-primary-500 hover:bg-primary-400 text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-primary-400"
+                                    >
+                                        Get Started
+                                    </Link>
+                                </>
+                            )
+                        )}
+                    </div>
                 </div>
             </header>
-
             {/* Mobile Menu Overlay */}
             {showMobileMenu && (
-                <div
-                    className="fixed inset-0 bg-black/50 z-50 md:hidden"
-                    onClick={() => setShowMobileMenu(false)}
-                >
-                    <div
-                        className="absolute left-0 top-0 bottom-0 w-72 bg-elevated p-6 animate-slide-in-left"
-                        onClick={e => e.stopPropagation()}
-                    >
-                        <button
-                            className="btn btn-ghost btn-icon absolute top-4 right-4"
-                            onClick={() => setShowMobileMenu(false)}
-                        >
+                <div className="fixed inset-0 bg-black/50 z-50 md:hidden" onClick={() => setShowMobileMenu(false)}>
+                    <div className="absolute left-0 top-0 bottom-0 w-72 bg-elevated p-6 animate-slide-in-left" onClick={e => e.stopPropagation()}>
+                        <button className="btn btn-ghost btn-icon absolute top-4 right-4" onClick={() => setShowMobileMenu(false)}>
                             <X size={24} />
                         </button>
-                        {/* Mobile menu content would go here */}
                     </div>
                 </div>
             )}
@@ -246,7 +261,7 @@ export function AppLayout({ children, title }) {
     return (
         <div className="min-h-screen">
             <Sidebar />
-            <TopHeader title={title} />
+            <TopHeader title={title} isDashboard={true} />
             <main className="main-content">
                 {children}
             </main>

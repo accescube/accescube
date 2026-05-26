@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { TopHeader } from '../components/layout/Navigation';
 import { useData } from '../contexts/DataContext';
 import { CubeCard } from '../components/ui/Card';
 import Button from '../components/ui/Button';
@@ -36,49 +37,7 @@ function Landing() {
 
     return (
         <div className="min-h-screen bg-secondary text-primary font-ui">
-            {/* Fixed Glassmorphism Navbar */}
-            <header className="fixed top-0 w-full z-50 h-20 backdrop-blur-md bg-black/60 border-b border-white/10 shadow-lg flex items-center">
-                <div className="w-full max-w-6xl mx-auto px-6 flex items-center justify-between">
-                    <div className="flex items-center">
-                        <Link to="/" className="flex items-center h-full">
-                            <img
-                                src="/logo-src.png"
-                                alt="Accescube Logo"
-                                style={{
-                                    height: '40px',
-                                    width: 'auto',
-                                    maxWidth: '160px',
-                                    objectFit: 'contain',
-                                    display: 'block',
-                                    filter: 'brightness(0) invert(1)'
-                                }}
-                            />
-                        </Link>
-                    </div>
-
-                    <div className="flex items-center gap-4 md:gap-6">
-                        <button
-                            onClick={toggleTheme}
-                            aria-label="Toggle theme"
-                            className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all duration-200"
-                        >
-                            {theme === 'dark' ? <Sun size={22} className="drop-shadow-md" /> : <Moon size={22} className="drop-shadow-md" />}
-                        </button>
-                        <Link
-                            to="/login"
-                            className="text-sm font-semibold text-white px-3 py-2 hover:text-primary-300 transition-colors hidden sm:block drop-shadow-md"
-                        >
-                            Sign in
-                        </Link>
-                        <Link
-                            to="/register"
-                            className="bg-primary-500 hover:bg-primary-400 text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 border border-primary-400"
-                        >
-                            Get Started
-                        </Link>
-                    </div>
-                </div>
-            </header>
+            <TopHeader title="Home" />
 
             {/* Full Width Background Hero Section */}
             <section 

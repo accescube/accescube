@@ -4,7 +4,7 @@ import { useData } from '../../contexts/DataContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../contexts/ToastContext';
-import { BottomNav } from '../../components/layout/Navigation';
+import { BottomNav, TopHeader } from '../../components/layout/Navigation';
 import { Badge } from '../../components/ui/Badge';
 import { Tabs } from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
@@ -71,39 +71,13 @@ function Community() {
 
     return (
         <div className="min-h-screen bg-primary pb-20 md:pb-0">
-            {/* Header */}
-            <header className="sticky top-0 glass z-40">
-                <div className="container py-4">
-                    <div className="flex items-center justify-between mb-4">
-                        <Link to="/" className="flex items-center gap-2">
-                            <img src="/cube.svg" alt="Accescube" style={{ width: 32, height: 32 }} />
-                            <span className="text-lg font-bold gradient-text">Accescube</span>
-                        </Link>
-                        <div className="flex items-center gap-2">
-                            <button
-                                className="btn btn-ghost btn-icon"
-                                onClick={toggleTheme}
-                            >
-                                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                            </button>
-                            {user ? (
-                                <Link to="/dashboard" className="btn btn-primary btn-sm">
-                                    Dashboard
-                                </Link>
-                            ) : (
-                                <Link to="/login" className="btn btn-primary btn-sm">
-                                    Login
-                                </Link>
-                            )}
-                        </div>
-                    </div>
+            <TopHeader title="Community" />
 
-                    <div>
-                        <h1 className="text-2xl font-bold mb-1">Community Events</h1>
-                        <p className="text-secondary">Discover local events, workshops, and networking opportunities</p>
-                    </div>
-                </div>
-            </header>
+            {/* Page Title & Subtitle */}
+            <div className="container pt-6 pb-2">
+                <h1 className="text-3xl font-extrabold mb-2">Community Events</h1>
+                <p className="text-secondary text-sm">Discover local events, workshops, and networking opportunities</p>
+            </div>
 
             {/* Tabs */}
             <div className="container py-4">

@@ -4,7 +4,7 @@ import { useData } from '../../contexts/DataContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useToast } from '../../contexts/ToastContext';
-import { BottomNav } from '../../components/layout/Navigation';
+import { BottomNav, TopHeader } from '../../components/layout/Navigation';
 import { Badge, Rating, Avatar } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import Button from '../../components/ui/Button';
@@ -138,17 +138,15 @@ function SpaceDetail() {
 
     return (
         <div className="min-h-screen bg-primary pb-20 md:pb-0">
-            {/* Header */}
-            <header className="sticky top-0 glass z-40">
-                <div className="container py-4 flex items-center justify-between">
-                    <Link to="/discover?tab=spaces" className="flex items-center gap-2 text-secondary hover:text-primary">
-                        <ArrowLeft size={20} />
-                        <span>Back</span>
-                    </Link>
-                    <div className="flex items-center gap-2">
+            <TopHeader
+                title={space.name}
+                backTo="/discover?tab=spaces"
+                actions={
+                    <>
                         <button
-                            className="btn btn-ghost btn-icon"
+                            className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all duration-200"
                             onClick={handleFavorite}
+                            aria-label="Favorite space"
                         >
                             <Heart
                                 size={20}
@@ -156,18 +154,16 @@ function SpaceDetail() {
                                 color={isFavorite('space', space.id) ? 'var(--error-500)' : 'currentColor'}
                             />
                         </button>
-                        <button className="btn btn-ghost btn-icon" onClick={handleShare}>
+                        <button
+                            className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all duration-200"
+                            onClick={handleShare}
+                            aria-label="Share space"
+                        >
                             <Share2 size={20} />
                         </button>
-                        <button
-                            className="btn btn-ghost btn-icon"
-                            onClick={toggleTheme}
-                        >
-                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
-                    </div>
-                </div>
-            </header>
+                    </>
+                }
+            />
 
             {/* Hero Image */}
             <div className="h-64 md:h-80 bg-gradient-card flex items-center justify-center text-6xl relative">
