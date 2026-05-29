@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import { useTheme } from './ThemeContext';
 
 const AuthContext = createContext();
 
@@ -126,9 +127,33 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const { theme } = useTheme();
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-primary flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <img
+                        src="/logo-src.png"
+                        alt="Accescube Logo"
+                        className="animate-pulse"
+                        style={{
+                            height: '50px',
+                            width: 'auto',
+                            maxWidth: '200px',
+                            objectFit: 'contain',
+                            filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'brightness(0)',
+                        }}
+                    />
+                    <div className="spinner mt-4"></div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfile, seedDemoUsers }}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 }

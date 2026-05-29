@@ -29,25 +29,44 @@ export function DataProvider({ children }) {
     const [eventRegistrations, setEventRegistrations] = useState([]);
     const [hiredAgents, setHiredAgents] = useState([]);
     const [employerSpaces, setEmployerSpaces] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     // ============ FIRESTORE LISTENERS ============
     // Helper to subscribe to a collection
-    const subscribe = (collectionName, setter) => {
+    const subscribe = (collectionName, setter, onInitialLoad) => {
         const q = query(collection(db, collectionName));
+        let isFirst = true;
         return onSnapshot(q, (snapshot) => {
             const data = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
             setter(data);
+            if (isFirst) {
+                isFirst = false;
+                if (onInitialLoad) onInitialLoad();
+            }
         }, (error) => {
             console.error(`Error reading ${collectionName}:`, error);
+            if (isFirst) {
+                isFirst = false;
+                if (onInitialLoad) onInitialLoad();
+            }
         });
     };
 
     useEffect(() => {
-        const unsubAgents = subscribe('agents', setAgents);
-        const unsubSpaces = subscribe('spaces', setSpaces);
+        let loadedCount = 0;
+        const criticalCollections = 2; // agents, spaces
+        const handleLoad = () => {
+            loadedCount++;
+            if (loadedCount >= criticalCollections) {
+                setLoading(false);
+            }
+        };
+
+        const unsubAgents = subscribe('agents', setAgents, handleLoad);
+        const unsubSpaces = subscribe('spaces', setSpaces, handleLoad);
         const unsubEmployers = subscribe('employers', setEmployers);
         const unsubEvents = subscribe('events', setEvents);
         const unsubBookings = subscribe('bookings', setBookings);
@@ -365,6 +384,7 @@ export function DataProvider({ children }) {
         <DataContext.Provider value={{
             // Data
             agents, spaces, employers, events, bookings, leads, messages, reviews, wallet, favorites,
+            loading,
 
             // Agent functions
             addAgent, updateAgent, deleteAgent,

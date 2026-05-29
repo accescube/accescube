@@ -47,7 +47,7 @@ function SpaceDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { spaces, toggleFavorite, isFavorite, createBooking } = useData();
+    const { spaces, loading, toggleFavorite, isFavorite, createBooking } = useData();
     const { theme, toggleTheme } = useTheme();
     const { toast } = useToast();
 
@@ -61,11 +61,19 @@ function SpaceDetail() {
 
     const space = spaces.find(s => s.id === id);
 
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-primary flex items-center justify-center">
+                <div className="spinner"></div>
+            </div>
+        );
+    }
+
     if (!space) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-primary">
                 <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-2">Space Not Found</h2>
+                    <h2 className="text-2xl font-bold mb-2 text-primary">Space Not Found</h2>
                     <Link to="/discover?tab=spaces" className="btn btn-primary">Browse Spaces</Link>
                 </div>
             </div>

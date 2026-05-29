@@ -29,7 +29,7 @@ function AgentDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { agents, toggleFavorite, isFavorite, createLead, sendMessage } = useData();
+    const { agents, loading, toggleFavorite, isFavorite, createLead, sendMessage } = useData();
     const { theme, toggleTheme } = useTheme();
     const { toast } = useToast();
 
@@ -44,11 +44,19 @@ function AgentDetail() {
 
     const agent = agents.find(a => a.id === id);
 
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-primary flex items-center justify-center">
+                <div className="spinner"></div>
+            </div>
+        );
+    }
+
     if (!agent) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-primary">
                 <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-2">Agent Not Found</h2>
+                    <h2 className="text-2xl font-bold mb-2 text-primary">Agent Not Found</h2>
                     <Link to="/discover" className="btn btn-primary">Browse Agents</Link>
                 </div>
             </div>

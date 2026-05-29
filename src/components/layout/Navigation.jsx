@@ -1,6 +1,5 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
     Home,
     Search,
@@ -179,6 +178,11 @@ export function TopHeader({ title, isDashboard = false, backTo, actions }) {
     const { theme, toggleTheme } = useTheme();
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const { user } = useAuth();
+    const location = useLocation();
+    // Close mobile overlay when navigating to a new route
+    useEffect(() => {
+        setShowMobileMenu(false);
+    }, [location.pathname]);
     return (
         <>
             <header className={isDashboard ? "top-header" : "public-header"}>
